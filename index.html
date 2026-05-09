@@ -3,22 +3,32 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>13 Days: You Are President Kennedy | V2</title>
+  <title>13 DAYS // CLASSIFIED // You Are President Kennedy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Special+Elite&family=Oswald:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #14110d;
-      --bg-2: #0e0c09;
-      --panel: #262018;
-      --panel-2: #31281e;
+      --bg: #0d0a06;
+      --bg-2: #060503;
+      --paper: #ebe0c4;
+      --paper-aged: #d8c89f;
+      --ink: #1a1410;
+      --panel: #1f1812;
+      --panel-2: #2a2118;
       --text: #f4ead2;
-      --muted: #d3c4a3;
-      --accent: #80d7c4;
-      --danger: #ff6b5f;
-      --warn: #f3c761;
-      --good: #9ad487;
-      --border: #7b694b;
-      --shadow: 0 12px 32px rgba(0,0,0,0.38);
-      --radius: 8px;
+      --muted: #b8a87f;
+      --accent: #6dd4bf;
+      --accent-2: #4fb8a3;
+      --danger: #ff5040;
+      --danger-glow: rgba(255,80,64,0.5);
+      --warn: #f5b942;
+      --good: #8fd472;
+      --classified-red: #c8201c;
+      --border: #6b5a3e;
+      --border-strong: #8a7449;
+      --shadow: 0 12px 32px rgba(0,0,0,0.5);
+      --shadow-deep: 0 20px 60px rgba(0,0,0,0.7);
     }
 
     * { box-sizing: border-box; }
@@ -26,13 +36,10 @@
     html, body {
       margin: 0;
       min-height: 100%;
-      background:
-        linear-gradient(rgba(255,255,255,0.02) 50%, rgba(0,0,0,0.02) 50%),
-        radial-gradient(circle at top, rgba(243,199,97,0.08), transparent 26%),
-        linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
-      background-size: 100% 4px, 100% 100%, 100% 100%;
+      background: var(--bg);
       color: var(--text);
-      font-family: "Trebuchet MS", Arial, sans-serif;
+      font-family: 'Special Elite', 'Courier New', monospace;
+      overflow-x: hidden;
     }
 
     body::before {
@@ -41,228 +48,816 @@
       inset: 0;
       pointer-events: none;
       background:
-        radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.18) 100%);
-      mix-blend-mode: multiply;
-      z-index: 2;
+        radial-gradient(ellipse at top, rgba(245,185,66,0.06), transparent 50%),
+        radial-gradient(ellipse at bottom right, rgba(109,212,191,0.04), transparent 60%),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
+      z-index: 0;
     }
 
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(255,255,255,0.015) 0px,
+        rgba(255,255,255,0.015) 1px,
+        transparent 1px,
+        transparent 3px
+      );
+      z-index: 100;
+      mix-blend-mode: overlay;
+    }
+
+    .tension-overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(circle at center, transparent 30%, rgba(255,80,64,0) 100%);
+      z-index: 99;
+      transition: background 1.5s ease;
+    }
+
+    .tension-overlay.high {
+      background: radial-gradient(circle at center, transparent 20%, rgba(255,80,64,0.18) 100%);
+      animation: tensionPulse 2.5s ease-in-out infinite;
+    }
+
+    .tension-overlay.critical {
+      background: radial-gradient(circle at center, transparent 10%, rgba(255,80,64,0.32) 100%);
+      animation: tensionPulse 1.2s ease-in-out infinite;
+    }
+
+    @keyframes tensionPulse {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 1; }
+    }
+
+    .grain {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.08;
+      z-index: 98;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    }
+
+    /* INTRO */
+    .intro-sequence {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      animation: introFadeOut 1s ease 4.5s forwards;
+    }
+
+    .intro-sequence.skip { display: none; }
+
+    @keyframes introFadeOut {
+      to { opacity: 0; pointer-events: none; visibility: hidden; }
+    }
+
+    .intro-radar {
+      width: 280px;
+      height: 280px;
+      border: 2px solid var(--accent);
+      border-radius: 50%;
+      position: relative;
+      box-shadow: 0 0 40px rgba(109,212,191,0.4), inset 0 0 40px rgba(109,212,191,0.1);
+      margin-bottom: 36px;
+      animation: radarFadeIn 0.6s ease;
+    }
+
+    .intro-radar::before, .intro-radar::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 1px solid rgba(109,212,191,0.3);
+    }
+    .intro-radar::before { transform: scale(0.66); }
+    .intro-radar::after { transform: scale(0.33); }
+
+    .radar-sweep {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 50%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent));
+      transform-origin: left center;
+      animation: radarSpin 2s linear infinite;
+      box-shadow: 0 0 8px var(--accent);
+    }
+
+    .radar-blip {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background: var(--danger);
+      border-radius: 50%;
+      box-shadow: 0 0 12px var(--danger-glow);
+      animation: blipPulse 1.5s ease infinite;
+    }
+    .radar-blip:nth-child(2) { top: 30%; left: 65%; animation-delay: 0.2s; }
+    .radar-blip:nth-child(3) { top: 60%; left: 70%; animation-delay: 0.6s; }
+    .radar-blip:nth-child(4) { top: 55%; left: 35%; animation-delay: 1s; }
+
+    @keyframes radarFadeIn {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    @keyframes radarSpin { to { transform: rotate(360deg); } }
+    @keyframes blipPulse {
+      0%, 100% { opacity: 0.3; transform: scale(0.8); }
+      50% { opacity: 1; transform: scale(1.3); }
+    }
+
+    .intro-classified {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 14px;
+      letter-spacing: 0.5em;
+      color: var(--accent);
+      margin-bottom: 8px;
+      opacity: 0;
+      animation: textFadeIn 0.5s ease 0.5s forwards;
+    }
+
+    .intro-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 88px;
+      letter-spacing: 0.05em;
+      color: var(--paper);
+      line-height: 1;
+      text-shadow: 0 0 30px rgba(255,234,210,0.3);
+      opacity: 0;
+      animation: textFadeIn 0.5s ease 1s forwards;
+    }
+
+    .intro-stamp {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-12deg) scale(3);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 64px;
+      color: var(--classified-red);
+      border: 6px solid var(--classified-red);
+      padding: 12px 28px;
+      letter-spacing: 0.15em;
+      opacity: 0;
+      animation: stampSlam 0.4s ease 2.2s forwards;
+      box-shadow: 0 0 0 4px rgba(200,32,28,0.2);
+      text-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+    }
+
+    @keyframes stampSlam {
+      0% { opacity: 0; transform: translate(-50%, -50%) rotate(-12deg) scale(3); }
+      60% { opacity: 1; transform: translate(-50%, -50%) rotate(-12deg) scale(0.9); }
+      100% { opacity: 1; transform: translate(-50%, -50%) rotate(-12deg) scale(1); }
+    }
+
+    @keyframes textFadeIn { to { opacity: 1; } }
+
+    .intro-skip {
+      position: absolute;
+      bottom: 30px;
+      right: 30px;
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.3);
+      color: rgba(255,255,255,0.6);
+      padding: 8px 14px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      cursor: pointer;
+      letter-spacing: 0.1em;
+    }
+
+    .intro-skip:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* App shell */
     .app {
       display: grid;
-      grid-template-columns: 350px 1fr;
+      grid-template-columns: 360px 1fr;
       min-height: 100vh;
       position: relative;
       z-index: 1;
     }
 
-    .sidebar {
-      background: linear-gradient(180deg, rgba(24,20,15,0.96), rgba(12,10,8,0.96));
-      border-right: 3px solid var(--border);
-      padding: 22px;
+    .top-banner {
+      grid-column: 1 / -1;
+      background: var(--classified-red);
+      color: #fff;
+      padding: 6px 24px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 13px;
+      letter-spacing: 0.3em;
+      text-align: center;
+      border-bottom: 2px solid #000;
       position: sticky;
       top: 0;
-      height: 100vh;
-      overflow-y: auto;
+      z-index: 50;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
     }
 
-    .main {
-      padding: 28px;
-      max-width: 1120px;
-      width: 100%;
-      margin: 0 auto;
+    .top-banner-center { flex: 1; text-align: center; }
+
+    .day-counter {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 0.15em;
+      background: rgba(0,0,0,0.4);
+      padding: 3px 10px;
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 2px;
     }
 
-    .eyebrow {
-      text-transform: uppercase;
-      letter-spacing: 0.16em;
-      font-size: 11px;
-      color: var(--warn);
-      font-weight: 900;
-      margin-bottom: 8px;
-    }
-
-    h1, h2, h3 {
-      margin: 0;
-      line-height: 1.05;
-      font-family: Impact, "Arial Black", sans-serif;
-      text-transform: uppercase;
-      letter-spacing: 0.03em;
-    }
-
-    h1 {
-      font-size: 36px;
-      margin-bottom: 8px;
-      text-shadow: 2px 2px 0 rgba(0,0,0,0.25);
-    }
-
-    h2 {
-      font-size: 42px;
-      margin-bottom: 14px;
-      color: var(--text);
-      text-shadow: 2px 2px 0 rgba(0,0,0,0.22);
-    }
-
-    .sub {
-      color: var(--muted);
-      line-height: 1.55;
+    .day-counter strong {
+      color: #ffeb99;
       font-size: 14px;
+    }
+
+    .blink-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background: #fff;
+      border-radius: 50%;
+      margin-right: 8px;
+      animation: blinkDot 1s ease infinite;
+    }
+
+    @keyframes blinkDot {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.2; }
+    }
+
+    /* Sound toggle */
+    .sound-toggle {
+      position: fixed;
+      bottom: 50px;
+      right: 24px;
+      background: rgba(31,24,18,0.95);
+      border: 1px solid var(--border);
+      color: var(--accent);
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 20px;
+      z-index: 40;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow);
+      transition: all 0.2s ease;
+    }
+    .sound-toggle:hover {
+      transform: scale(1.1);
+      border-color: var(--accent);
+    }
+
+    /* Bottom ticker */
+    .ticker {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 32px;
+      background: linear-gradient(90deg, #000, #1a1410, #000);
+      border-top: 2px solid var(--border-strong);
+      overflow: hidden;
+      z-index: 45;
+      display: flex;
+      align-items: center;
+    }
+
+    .ticker-label {
+      background: var(--warn);
+      color: #000;
+      padding: 4px 12px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      flex-shrink: 0;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .ticker-label::before {
+      content: "●";
+      animation: blinkDot 1s ease infinite;
+    }
+
+    .ticker-content {
+      white-space: nowrap;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--accent);
+      animation: tickerScroll 60s linear infinite;
+      padding-left: 100%;
+      letter-spacing: 0.05em;
+    }
+
+    .ticker-content span {
+      margin-right: 60px;
+      color: var(--muted);
+    }
+
+    .ticker-content span.urgent { color: var(--danger); }
+    .ticker-content span.cool { color: var(--accent); }
+
+    @keyframes tickerScroll {
+      from { transform: translateX(0); }
+      to { transform: translateX(-100%); }
+    }
+
+    /* Sidebar */
+    .sidebar {
+      background: linear-gradient(180deg, rgba(31,24,18,0.98), rgba(13,10,6,0.98));
+      border-right: 3px solid var(--border-strong);
+      padding: 24px 20px 50px;
+      position: sticky;
+      top: 30px;
+      height: calc(100vh - 30px);
+      overflow-y: auto;
+      box-shadow: inset -8px 0 16px -8px rgba(0,0,0,0.5);
+    }
+
+    .sidebar::-webkit-scrollbar { width: 6px; }
+    .sidebar::-webkit-scrollbar-track { background: rgba(0,0,0,0.3); }
+    .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+    .sidebar-header {
+      padding-bottom: 18px;
+      border-bottom: 2px dashed var(--border);
       margin-bottom: 18px;
     }
 
+    .eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      text-transform: uppercase;
+      letter-spacing: 0.25em;
+      font-size: 10px;
+      color: var(--warn);
+      font-weight: 700;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .eyebrow::before { content: "▸"; color: var(--warn); }
+
+    .sidebar h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 52px;
+      line-height: 0.9;
+      letter-spacing: 0.04em;
+      margin: 0 0 6px;
+      color: var(--paper);
+      text-shadow: 3px 3px 0 rgba(0,0,0,0.4);
+    }
+
+    .sidebar h1 .colon { color: var(--accent); }
+
+    .sidebar-sub {
+      color: var(--muted);
+      font-family: 'Special Elite', monospace;
+      line-height: 1.5;
+      font-size: 13px;
+      margin-top: 10px;
+    }
+
     .panel {
-      background: linear-gradient(180deg, rgba(49,40,30,0.96), rgba(31,26,20,0.96));
-      border: 2px solid var(--border);
-      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(42,33,24,0.6), rgba(20,16,11,0.6));
+      border: 1px solid var(--border);
+      border-radius: 4px;
       box-shadow: var(--shadow);
+      position: relative;
     }
 
-    .stats, .meta, .history {
-      padding: 16px;
-      margin-bottom: 16px;
+    .panel::before {
+      content: "";
+      position: absolute;
+      top: -1px;
+      left: -1px;
+      right: -1px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), transparent 60%);
+      opacity: 0.4;
     }
 
-    .stat {
-      margin-bottom: 16px;
+    .stats-panel, .meta, .history { padding: 16px; margin-bottom: 16px; }
+
+    .panel-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 16px;
+      letter-spacing: 0.18em;
+      color: var(--accent);
+      margin: 0 0 14px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(109,212,191,0.2);
     }
 
-    .stat:last-child { margin-bottom: 0; }
+    .stat-row { margin-bottom: 14px; }
+    .stat-row:last-child { margin-bottom: 0; }
 
     .stat-head {
       display: flex;
       justify-content: space-between;
-      gap: 10px;
-      align-items: center;
-      margin-bottom: 6px;
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: 0.08em;
+      align-items: baseline;
+      margin-bottom: 5px;
+      font-family: 'Oswald', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
       color: var(--muted);
     }
 
-    .meter {
-      font-family: "Courier New", monospace;
-      font-size: 16px;
-      letter-spacing: 0.08em;
-      line-height: 1;
+    .stat-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--paper);
     }
 
-    .meter.danger { color: var(--danger); }
-    .meter.warn { color: var(--warn); }
-    .meter.good { color: var(--good); }
-    .meter.accent { color: var(--accent); }
+    .meter-bar {
+      height: 10px;
+      background: rgba(0,0,0,0.5);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 2px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .meter-fill {
+      height: 100%;
+      transition: width 0.7s cubic-bezier(0.34, 1.2, 0.64, 1), background 0.5s ease;
+      position: relative;
+      box-shadow: 0 0 8px currentColor;
+    }
+
+    .meter-fill::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 4px,
+        rgba(0,0,0,0.15) 4px,
+        rgba(0,0,0,0.15) 8px
+      );
+    }
+
+    .meter-fill.danger { background: var(--danger); color: var(--danger); }
+    .meter-fill.warn { background: var(--warn); color: var(--warn); }
+    .meter-fill.good { background: var(--good); color: var(--good); }
+    .meter-fill.accent { background: var(--accent); color: var(--accent); }
+
+    .stat-row.flash { animation: statFlash 0.6s ease; }
+
+    @keyframes statFlash {
+      0% { background: transparent; transform: translateX(0); }
+      30% { background: rgba(255,255,255,0.05); transform: translateX(2px); }
+      60% { transform: translateX(-1px); }
+      100% { background: transparent; transform: translateX(0); }
+    }
 
     .meta ul {
-      margin: 8px 0 0;
-      padding-left: 18px;
-      line-height: 1.6;
+      margin: 0;
+      padding-left: 16px;
+      line-height: 1.55;
       color: var(--muted);
-      font-size: 14px;
+      font-size: 12.5px;
+      font-family: 'Special Elite', monospace;
     }
 
-    .history h3, .meta h3 {
-      font-size: 14px;
-      color: var(--accent);
-      margin-bottom: 10px;
-      letter-spacing: 0.08em;
-    }
+    .meta li { margin-bottom: 4px; }
 
     .history-list {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 6px;
+      max-height: 200px;
+      overflow-y: auto;
     }
 
     .history-item {
-      padding: 10px 12px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.03);
-      border-radius: 8px;
+      padding: 8px 10px;
+      border-left: 2px solid var(--accent);
+      background: rgba(255,255,255,0.025);
       color: var(--muted);
-      font-size: 13px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
       line-height: 1.45;
+      animation: historySlide 0.4s ease;
+    }
+
+    .history-empty {
+      color: rgba(184,168,127,0.5);
+      font-style: italic;
+      font-size: 12px;
+      text-align: center;
+      padding: 8px;
+      font-family: 'Special Elite', monospace;
+    }
+
+    @keyframes historySlide {
+      from { opacity: 0; transform: translateX(-12px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    /* Main */
+    .main {
+      padding: 36px 40px 80px;
+      max-width: 1140px;
+      width: 100%;
+    }
+
+    .scene-meta-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.15em;
+    }
+
+    .scene-meta-bar .left { display: flex; align-items: center; gap: 12px; }
+    .scene-meta-bar .doc-num { color: var(--warn); font-weight: 700; }
+
+    .live-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--danger);
+    }
+
+    .live-indicator::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      background: var(--danger);
+      border-radius: 50%;
+      animation: blinkDot 1s ease infinite;
+      box-shadow: 0 0 6px var(--danger);
+    }
+
+    .flash-log {
+      margin-bottom: 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      min-height: 32px;
+    }
+
+    .flash-pill {
+      padding: 6px 12px;
+      border-radius: 2px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      border: 1px solid;
+      animation: pillSlide 0.4s cubic-bezier(0.34, 1.5, 0.64, 1);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .flash-pill.up {
+      background: rgba(255,80,64,0.12);
+      border-color: rgba(255,80,64,0.5);
+      color: #ffb4ac;
+      box-shadow: 0 0 12px rgba(255,80,64,0.2);
+    }
+
+    .flash-pill.down {
+      background: rgba(109,212,191,0.12);
+      border-color: rgba(109,212,191,0.5);
+      color: #b8eede;
+      box-shadow: 0 0 12px rgba(109,212,191,0.2);
+    }
+
+    @keyframes pillSlide {
+      from { opacity: 0; transform: translateY(-8px) scale(0.9); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
     }
 
     .scene {
-      padding: 24px;
-      margin-bottom: 18px;
+      padding: 28px 32px;
+      margin-bottom: 20px;
       position: relative;
       overflow: hidden;
+      animation: sceneSlideIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    .scene::after {
+    @keyframes sceneSlideIn {
+      from { opacity: 0; transform: translateY(20px); filter: blur(8px); }
+      to { opacity: 1; transform: translateY(0); filter: blur(0); }
+    }
+
+    .scene::before {
       content: "";
       position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background: linear-gradient(135deg, rgba(128,215,196,0.05), transparent 35%);
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--accent), var(--warn), var(--danger));
+      opacity: 0.7;
     }
 
+    .scene-corner {
+      position: absolute;
+      top: 12px; right: 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: rgba(245,185,66,0.5);
+      letter-spacing: 0.15em;
+    }
+
+    h2.scene-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 56px;
+      line-height: 0.95;
+      letter-spacing: 0.02em;
+      margin: 0 0 6px;
+      color: var(--paper);
+      text-shadow: 3px 3px 0 rgba(0,0,0,0.3);
+      animation: titleSlide 0.7s ease 0.1s both;
+    }
+
+    @keyframes titleSlide {
+      from { opacity: 0; transform: translateX(-20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .scene-subtitle {
+      font-family: 'Special Elite', monospace;
+      color: var(--accent);
+      font-size: 14px;
+      margin-bottom: 18px;
+      letter-spacing: 0.05em;
+    }
 
     .scene-visual-wrap {
-      margin: 18px 0 20px;
+      margin: 18px 0 22px;
       position: relative;
       z-index: 1;
+      animation: visualReveal 0.8s ease 0.3s both;
+    }
+
+    @keyframes visualReveal {
+      from { opacity: 0; transform: scale(0.96); }
+      to { opacity: 1; transform: scale(1); }
     }
 
     .scene-visual {
       width: 100%;
       aspect-ratio: 16 / 9;
       overflow: hidden;
-      border: 2px solid var(--border);
-      border-radius: 8px;
+      border: 2px solid var(--border-strong);
+      border-radius: 4px;
       background: #0b0b0b;
-      box-shadow: var(--shadow);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      box-shadow: var(--shadow-deep);
+      position: relative;
+    }
+
+    .scene-visual::before {
+      content: "";
+      position: absolute; inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(255,255,255,0.04) 0px,
+        rgba(255,255,255,0.04) 1px,
+        transparent 1px,
+        transparent 2px
+      );
+      z-index: 2; pointer-events: none;
+    }
+
+    .scene-visual::after {
+      content: "";
+      position: absolute; inset: 0;
+      box-shadow: inset 0 0 60px rgba(0,0,0,0.6);
+      z-index: 2; pointer-events: none;
     }
 
     .scene-visual img {
-      width: 100%;
-      height: 100%;
+      width: 100%; height: 100%;
       object-fit: cover;
       display: block;
-      image-rendering: auto;
+      filter: contrast(1.1) saturate(0.9);
     }
 
     .scene-visual-caption {
       margin-top: 8px;
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.2em;
       color: var(--muted);
       text-align: center;
-      font-weight: 800;
+      text-transform: uppercase;
     }
 
-
+    /* TYPEWRITER BODY — Special Elite font, bigger letter spacing */
     .scene-body {
-      font-size: 22px;
-      line-height: 1.65;
+      font-family: 'Special Elite', 'Courier New', monospace;
+      font-weight: 400;
+      font-size: 19px;
+      line-height: 1.75;
+      letter-spacing: 0.005em;
       color: var(--text);
       white-space: pre-wrap;
       position: relative;
       z-index: 1;
+      text-shadow: 0 1px 0 rgba(0,0,0,0.3);
     }
 
-    .scene-body .emph {
+    /* Inline styling classes — used in hand-styled scripts */
+    .scene-body em, .scene-body .think {
+      font-style: italic;
+      color: #d8c89f;
+      font-family: 'Special Elite', monospace;
+      opacity: 0.95;
+    }
+
+    .scene-body strong, .scene-body .punch {
+      font-family: 'Bebas Neue', sans-serif;
+      font-weight: 400;
+      font-size: 1.25em;
+      letter-spacing: 0.04em;
       color: #fff4d0;
-      font-weight: 900;
-      letter-spacing: 0.01em;
+      display: inline-block;
+      line-height: 1;
+      margin: 0 1px;
+      text-shadow: 1px 1px 0 rgba(0,0,0,0.4);
     }
 
-    .scene-body .danger-text {
-      color: #ffb3a8;
-      font-weight: 900;
+    .scene-body .hl {
+      background: linear-gradient(180deg, transparent 55%, rgba(245,185,66,0.35) 55%, rgba(245,185,66,0.35) 90%, transparent 90%);
+      color: #fff4d0;
+      padding: 0 3px;
+      font-weight: 700;
     }
 
-    .scene-body .cool-text {
-      color: #aeeedf;
-      font-weight: 900;
+    .scene-body .danger {
+      color: #ff8b80;
+      font-weight: 700;
+      text-shadow: 0 0 8px rgba(255,80,64,0.4);
     }
 
-    .scene-body .muted-ital {
-      color: #e7d9b7;
+    .scene-body .cool {
+      color: var(--accent);
+      font-weight: 700;
+      text-shadow: 0 0 8px rgba(109,212,191,0.3);
+    }
+
+    .scene-body .stamp-inline {
+      display: inline-block;
+      color: var(--classified-red);
+      border: 2px solid var(--classified-red);
+      padding: 0 6px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 0.85em;
+      letter-spacing: 0.1em;
+      transform: rotate(-3deg);
+      margin: 0 4px;
+    }
+
+    .scene-body .redact {
+      background: #000;
+      color: #000;
+      padding: 0 4px;
+      user-select: none;
+      transition: all 0.3s ease;
+    }
+    .scene-body .redact:hover {
+      background: rgba(0,0,0,0.3);
+      color: var(--paper);
+    }
+
+    .scene-body .quote {
+      display: block;
+      margin: 8px 0 8px 18px;
+      padding-left: 14px;
+      border-left: 3px solid var(--warn);
+      color: #ffeec1;
       font-style: italic;
     }
 
@@ -279,143 +874,216 @@
       50%, 100% { opacity: 0; }
     }
 
-
     .support-box, .alert-box {
-      margin-top: 18px;
-      padding: 15px 16px;
-      border-radius: 8px;
-      border: 2px solid;
+      margin-top: 20px;
+      padding: 14px 18px;
+      border-radius: 3px;
+      border-left: 4px solid;
       position: relative;
       z-index: 1;
+      animation: boxSlide 0.5s ease 0.5s both;
+      font-family: 'Special Elite', monospace;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    @keyframes boxSlide {
+      from { opacity: 0; transform: translateX(-10px); }
+      to { opacity: 1; transform: translateX(0); }
     }
 
     .support-box {
-      background: rgba(128,215,196,0.09);
-      border-color: rgba(128,215,196,0.28);
+      background: rgba(109,212,191,0.08);
+      border-color: var(--accent);
       color: #daf4ec;
     }
 
     .alert-box {
-      background: rgba(255,107,95,0.09);
-      border-color: rgba(255,107,95,0.28);
+      background: rgba(255,80,64,0.1);
+      border-color: var(--danger);
       color: #ffd8d4;
+      animation: boxSlide 0.5s ease 0.5s both, alertGlow 2s ease infinite;
     }
 
-    .support-title {
-      font-size: 12px;
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin-bottom: 8px;
-      color: var(--accent);
+    @keyframes alertGlow {
+      0%, 100% { box-shadow: 0 0 0 rgba(255,80,64,0); }
+      50% { box-shadow: 0 0 20px rgba(255,80,64,0.25); }
     }
 
-    .alert-title {
-      font-size: 12px;
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin-bottom: 8px;
-      color: #ffb4ac;
+    .support-title, .alert-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: 0.2em;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .support-title { color: var(--accent); }
+    .alert-title { color: #ffb4ac; }
+
+    .alert-title::before {
+      content: "⚠";
+      font-size: 16px;
+      animation: alertIcon 1s ease infinite;
+    }
+
+    @keyframes alertIcon {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
     }
 
     .advisor-row {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 12px;
-      margin-top: 18px;
+      margin-top: 22px;
       position: relative;
       z-index: 1;
     }
 
     .advisor-card {
-      border: 2px solid rgba(255,255,255,0.08);
-      background: rgba(0,0,0,0.14);
-      border-radius: 8px;
-      padding: 12px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(42,33,24,0.5), rgba(20,16,11,0.5));
+      border-radius: 3px;
+      padding: 14px;
+      position: relative;
+      animation: advisorSlide 0.5s ease both;
+    }
+
+    .advisor-card:nth-child(1) { animation-delay: 0.6s; }
+    .advisor-card:nth-child(2) { animation-delay: 0.7s; }
+    .advisor-card:nth-child(3) { animation-delay: 0.8s; }
+
+    @keyframes advisorSlide {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .advisor-card::before {
+      content: "TRANSCRIPT";
+      position: absolute;
+      top: -7px; left: 12px;
+      background: var(--bg);
+      padding: 0 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      color: var(--warn);
     }
 
     .advisor-card h3 {
-      font-size: 14px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 16px;
+      letter-spacing: 0.15em;
       color: var(--warn);
-      margin-bottom: 6px;
+      margin: 4px 0 8px;
     }
 
     .advisor-card p {
       margin: 0;
-      color: var(--muted);
+      color: var(--text);
       line-height: 1.5;
       font-size: 14px;
+      font-family: 'Special Elite', monospace;
     }
 
-    .flash-log {
-      margin-bottom: 18px;
+    .choices { display: grid; gap: 14px; }
+
+    .choices-header {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 18px;
+      letter-spacing: 0.25em;
+      color: var(--warn);
+      margin-bottom: 14px;
+      padding: 8px 14px;
+      background: rgba(245,185,66,0.08);
+      border-left: 3px solid var(--warn);
       display: flex;
-      flex-wrap: wrap;
+      align-items: center;
       gap: 10px;
-      min-height: 34px;
     }
 
-    .flash-pill {
-      padding: 8px 12px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      border: 2px solid;
-      animation: popIn 0.35s ease;
-    }
-
-    .flash-pill.up {
-      background: rgba(255,107,95,0.12);
-      border-color: rgba(255,107,95,0.35);
-      color: #ffb4ac;
-    }
-
-    .flash-pill.down {
-      background: rgba(128,215,196,0.12);
-      border-color: rgba(128,215,196,0.35);
-      color: #c7f3e7;
-    }
-
-    @keyframes popIn {
-      from { transform: translateY(6px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
-
-    .choices {
-      display: grid;
-      gap: 14px;
+    .choices-header::before {
+      content: "►";
+      font-size: 14px;
     }
 
     .choice {
       width: 100%;
       text-align: left;
-      background: linear-gradient(180deg, #3b342a, #262119);
+      background: linear-gradient(180deg, #3a3122 0%, #1f1812 100%);
       color: var(--text);
-      border: 2px solid #887555;
-      border-radius: 8px;
-      padding: 18px;
+      border: 1px solid var(--border-strong);
+      border-left: 4px solid var(--accent);
+      border-radius: 3px;
+      padding: 18px 22px;
       cursor: pointer;
-      transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease;
+      transition: transform 0.2s cubic-bezier(0.34, 1.5, 0.64, 1),
+                  border-color 0.2s ease,
+                  box-shadow 0.2s ease,
+                  background 0.2s ease;
       box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+      animation: choiceSlide 0.4s ease both;
+    }
+
+    .choice:nth-child(1) { animation-delay: 0.7s; }
+    .choice:nth-child(2) { animation-delay: 0.8s; }
+    .choice:nth-child(3) { animation-delay: 0.9s; }
+    .choice:nth-child(4) { animation-delay: 1.0s; }
+
+    @keyframes choiceSlide {
+      from { opacity: 0; transform: translateX(-16px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .choice::after {
+      content: "";
+      position: absolute;
+      top: 0; right: 0;
+      width: 60px; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(109,212,191,0.06));
+      opacity: 0;
+      transition: opacity 0.3s ease;
     }
 
     .choice:hover, .choice:focus-visible {
-      transform: translateY(-2px) scale(1.01);
+      transform: translateX(6px);
       border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(128,215,196,0.10), var(--shadow);
+      border-left-color: var(--warn);
+      border-left-width: 6px;
+      box-shadow: -2px 6px 24px rgba(0,0,0,0.5), 0 0 0 1px rgba(109,212,191,0.3);
       outline: none;
+      background: linear-gradient(180deg, #423728 0%, #251c14 100%);
     }
 
+    .choice:hover::after { opacity: 1; }
+
     .choice-label {
-      display: block;
-      font-family: Impact, "Arial Black", sans-serif;
-      font-size: 22px;
-      text-transform: uppercase;
-      letter-spacing: 0.03em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 26px;
+      letter-spacing: 0.04em;
       margin-bottom: 6px;
+      color: var(--paper);
+    }
+
+    .choice-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px; height: 28px;
+      border: 2px solid currentColor;
+      border-radius: 50%;
+      font-size: 14px;
+      color: var(--accent);
+      flex-shrink: 0;
     }
 
     .choice-desc {
@@ -423,247 +1091,474 @@
       color: var(--muted);
       font-size: 14px;
       line-height: 1.55;
-      text-transform: none;
+      font-family: 'Special Elite', monospace;
+      padding-left: 38px;
     }
+
+    /* Risk preview dots on choice hover */
+    .choice-risk {
+      position: absolute;
+      top: 12px;
+      right: 16px;
+      display: flex;
+      gap: 4px;
+    }
+
+    .risk-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.15);
+    }
+
+    .risk-dot.active.low { background: var(--good); box-shadow: 0 0 6px var(--good); }
+    .risk-dot.active.med { background: var(--warn); box-shadow: 0 0 6px var(--warn); }
+    .risk-dot.active.high { background: var(--danger); box-shadow: 0 0 6px var(--danger); }
 
     .result-banner {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      margin-bottom: 12px;
-      padding: 9px 12px;
-      border-radius: 999px;
-      border: 2px solid rgba(255,107,95,0.35);
-      background: rgba(255,107,95,0.12);
+      gap: 10px;
+      margin-bottom: 14px;
+      padding: 10px 16px;
+      border-radius: 2px;
+      border: 2px solid var(--danger);
+      background: rgba(255,80,64,0.15);
       color: #ffbeb8;
-      font-size: 12px;
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 14px;
+      letter-spacing: 0.2em;
+      animation: bannerPulse 2s ease infinite;
+    }
+
+    .result-banner::before {
+      content: "■";
+      animation: blinkDot 1s ease infinite;
     }
 
     .result-banner.goodish {
-      border-color: rgba(154,212,135,0.35);
-      background: rgba(154,212,135,0.12);
+      border-color: var(--good);
+      background: rgba(143,212,114,0.15);
       color: #d4f3ca;
+    }
+
+    @keyframes bannerPulse {
+      0%, 100% { box-shadow: 0 0 0 rgba(255,80,64,0); }
+      50% { box-shadow: 0 0 20px rgba(255,80,64,0.3); }
     }
 
     .summary-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 12px;
-      margin-top: 18px;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 14px;
+      margin-top: 22px;
     }
 
     .summary-card {
-      padding: 16px;
-      border-radius: 8px;
-      background: rgba(255,255,255,0.04);
-      border: 2px solid rgba(255,255,255,0.08);
+      padding: 18px;
+      border-radius: 3px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-top: 3px solid var(--accent);
     }
 
     .summary-card h3 {
-      font-size: 13px;
-      margin-bottom: 8px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 16px;
+      letter-spacing: 0.18em;
+      margin: 0 0 12px;
       color: var(--accent);
+    }
+
+    .summary-card div {
+      font-family: 'Special Elite', monospace;
+      font-size: 13px;
+      line-height: 1.55;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .summary-card strong {
+      color: var(--warn);
+      font-family: 'JetBrains Mono', monospace;
     }
 
     .summary-card ul {
       margin: 0;
       padding-left: 18px;
-      line-height: 1.55;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      line-height: 1.7;
       color: var(--muted);
-      font-size: 14px;
     }
 
     .reflection {
-      margin-top: 18px;
-      padding: 16px;
-      border-radius: 8px;
-      background: rgba(243,199,97,0.09);
-      border: 2px solid rgba(243,199,97,0.26);
+      margin-top: 22px;
+      padding: 18px 22px;
+      border-radius: 3px;
+      background: rgba(245,185,66,0.1);
+      border: 1px solid rgba(245,185,66,0.4);
+      border-left: 4px solid var(--warn);
       color: #ffeec1;
-      line-height: 1.6;
+      line-height: 1.65;
+      font-family: 'Special Elite', monospace;
+      font-size: 15px;
+    }
+
+    .reflection strong {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 16px;
+      letter-spacing: 0.2em;
+      color: var(--warn);
+      display: block;
+      margin-bottom: 8px;
     }
 
     .footer-actions {
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
-      margin-top: 18px;
+      margin-top: 22px;
     }
 
     .btn {
-      border: 2px solid var(--border);
-      background: linear-gradient(180deg, rgba(128,215,196,0.14), rgba(128,215,196,0.07));
+      border: 1px solid var(--border-strong);
+      background: linear-gradient(180deg, rgba(109,212,191,0.18), rgba(109,212,191,0.06));
       color: var(--text);
-      padding: 12px 16px;
-      border-radius: 8px;
+      padding: 12px 22px;
+      border-radius: 3px;
       cursor: pointer;
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      font-size: 13px;
+      font-family: 'Bebas Neue', sans-serif;
+      letter-spacing: 0.18em;
+      font-size: 14px;
+      transition: all 0.2s ease;
+    }
+
+    .btn:hover {
+      background: linear-gradient(180deg, rgba(109,212,191,0.3), rgba(109,212,191,0.12));
+      border-color: var(--accent);
+      transform: translateY(-1px);
     }
 
     .btn.secondary {
-      background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.03));
+      background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
     }
 
-    .stat-flash {
-      animation: statPulse 0.55s ease;
+    .shake { animation: shake 0.5s ease; }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      10% { transform: translateX(-4px) translateY(2px); }
+      30% { transform: translateX(4px) translateY(-2px); }
+      50% { transform: translateX(-3px) translateY(2px); }
+      70% { transform: translateX(3px) translateY(-1px); }
+      90% { transform: translateX(-1px); }
     }
 
-    @keyframes statPulse {
-      0% { transform: scale(1); }
-      35% { transform: scale(1.08); }
-      100% { transform: scale(1); }
+    .scene.ending-bad {
+      border: 1px solid rgba(255,80,64,0.3);
+      box-shadow: 0 0 40px rgba(255,80,64,0.15), var(--shadow-deep);
+    }
+
+    .scene.ending-bad::before {
+      background: linear-gradient(90deg, var(--danger), #ff8800, var(--danger));
+      height: 5px;
+    }
+
+    .scene.ending-good::before {
+      background: linear-gradient(90deg, var(--good), var(--accent), var(--good));
+      height: 5px;
     }
 
     @media (max-width: 980px) {
-      .app {
-        grid-template-columns: 1fr;
-      }
-
+      .app { grid-template-columns: 1fr; }
       .sidebar {
-        position: static;
-        height: auto;
+        position: static; height: auto;
         border-right: none;
-        border-bottom: 3px solid var(--border);
+        border-bottom: 3px solid var(--border-strong);
       }
-
-      .main { padding: 18px; }
-      h2 { font-size: 32px; }
-      .scene-body { font-size: 19px; }
-      .choice-label { font-size: 20px; }
+      .main { padding: 24px 18px 80px; }
+      h2.scene-title { font-size: 38px; }
+      .scene-body { font-size: 16px; }
+      .choice-label { font-size: 22px; }
+      .intro-title { font-size: 56px; }
+      .intro-stamp { font-size: 40px; padding: 8px 18px; }
+      .sidebar h1 { font-size: 40px; }
+      .top-banner { font-size: 10px; padding: 6px 8px; }
+      .day-counter { font-size: 10px; }
+      .ticker-content { font-size: 10px; }
+      .scene-body strong, .scene-body .punch { font-size: 1.15em; }
     }
   </style>
 </head>
 <body>
-  <div class="app">
-    <aside class="sidebar">
-      <div class="eyebrow">Cold War Crisis Simulator</div>
-      <h1>13 Days</h1>
-      <div class="sub">You are President Kennedy. Soviet missiles are in Cuba. One bad move could blow up the world.</div>
 
-      <section class="panel stats" aria-label="Game stats">
-        <div class="stat" id="wrap-WORLD_TENSION">
-          <div class="stat-head"><span>Global Threat Level</span><strong id="stat-WORLD_TENSION">2</strong></div>
-          <div id="meter-WORLD_TENSION" class="meter danger"></div>
+  <div class="intro-sequence" id="intro">
+    <div class="intro-classified">EYES ONLY // OCTOBER 1962</div>
+    <div class="intro-radar">
+      <div class="radar-sweep"></div>
+      <div class="radar-blip"></div>
+      <div class="radar-blip"></div>
+      <div class="radar-blip"></div>
+    </div>
+    <div class="intro-title">13 DAYS</div>
+    <div class="intro-stamp">TOP SECRET</div>
+    <button class="intro-skip" onclick="document.getElementById('intro').classList.add('skip')">SKIP ▸</button>
+  </div>
+
+  <div class="grain"></div>
+  <div class="tension-overlay" id="tension-overlay"></div>
+
+  <button class="sound-toggle" id="sound-toggle" title="Toggle sound">🔊</button>
+
+  <div class="app">
+    <div class="top-banner">
+      <span><span class="blink-dot"></span>CLASSIFIED</span>
+      <span class="top-banner-center">// EXECUTIVE BRIEFING // OCTOBER 1962 //</span>
+      <span class="day-counter">DAY <strong id="day-num">1</strong>/13</span>
+    </div>
+
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="eyebrow">CRISIS SIMULATOR</div>
+        <h1>13<span class="colon">:</span>DAYS</h1>
+        <div class="sidebar-sub">
+          You are <strong>President Kennedy</strong>. Soviet missiles are in Cuba.<br>
+          One bad move ends the world.
         </div>
-        <div class="stat" id="wrap-US_CREDIBILITY">
-          <div class="stat-head"><span>U.S. Power Image</span><strong id="stat-US_CREDIBILITY">5</strong></div>
-          <div id="meter-US_CREDIBILITY" class="meter accent"></div>
+      </div>
+
+      <section class="panel stats-panel">
+        <h3 class="panel-title">Status Report</h3>
+        <div class="stat-row" id="wrap-WORLD_TENSION">
+          <div class="stat-head"><span>Global Threat Level</span><span class="stat-value" id="stat-WORLD_TENSION">2/10</span></div>
+          <div class="meter-bar"><div class="meter-fill danger" id="meter-WORLD_TENSION" style="width: 20%"></div></div>
         </div>
-        <div class="stat" id="wrap-DIPLOMATIC_SPACE">
-          <div class="stat-head"><span>Room to Negotiate</span><strong id="stat-DIPLOMATIC_SPACE">5</strong></div>
-          <div id="meter-DIPLOMATIC_SPACE" class="meter good"></div>
+        <div class="stat-row" id="wrap-US_CREDIBILITY">
+          <div class="stat-head"><span>U.S. Power Image</span><span class="stat-value" id="stat-US_CREDIBILITY">5/10</span></div>
+          <div class="meter-bar"><div class="meter-fill accent" id="meter-US_CREDIBILITY" style="width: 50%"></div></div>
         </div>
-        <div class="stat" id="wrap-MILITARY_PRESSURE">
-          <div class="stat-head"><span>Generals in Your Ear</span><strong id="stat-MILITARY_PRESSURE">4</strong></div>
-          <div id="meter-MILITARY_PRESSURE" class="meter warn"></div>
+        <div class="stat-row" id="wrap-DIPLOMATIC_SPACE">
+          <div class="stat-head"><span>Room to Negotiate</span><span class="stat-value" id="stat-DIPLOMATIC_SPACE">5/10</span></div>
+          <div class="meter-bar"><div class="meter-fill good" id="meter-DIPLOMATIC_SPACE" style="width: 50%"></div></div>
         </div>
-        <div class="stat" id="wrap-PUBLIC_FEAR">
-          <div class="stat-head"><span>Panic Level</span><strong id="stat-PUBLIC_FEAR">5</strong></div>
-          <div id="meter-PUBLIC_FEAR" class="meter warn"></div>
+        <div class="stat-row" id="wrap-MILITARY_PRESSURE">
+          <div class="stat-head"><span>Generals in Your Ear</span><span class="stat-value" id="stat-MILITARY_PRESSURE">4/10</span></div>
+          <div class="meter-bar"><div class="meter-fill warn" id="meter-MILITARY_PRESSURE" style="width: 40%"></div></div>
+        </div>
+        <div class="stat-row" id="wrap-PUBLIC_FEAR">
+          <div class="stat-head"><span>Panic Level</span><span class="stat-value" id="stat-PUBLIC_FEAR">5/10</span></div>
+          <div class="meter-bar"><div class="meter-fill warn" id="meter-PUBLIC_FEAR" style="width: 50%"></div></div>
         </div>
       </section>
 
       <section class="panel meta">
-        <h3>What This Is Teaching</h3>
+        <h3 class="panel-title">Mission Brief</h3>
         <ul>
-          <li>Why the Cuban Missile Crisis felt like the world was one click from disaster</li>
+          <li>Why this felt like the world was one click from disaster</li>
           <li>How Cold War fear shaped what both sides did</li>
-          <li>Why leaders were stuck choosing between bad and worse</li>
-          <li>Why the “best” ending still is not morally clean</li>
+          <li>Why leaders were stuck between bad and worse</li>
+          <li>Why the "best" ending still isn't morally clean</li>
         </ul>
       </section>
 
       <section class="panel history">
-        <h3>Your Path So Far</h3>
+        <h3 class="panel-title">Mission Log</h3>
         <div id="history-list" class="history-list"></div>
       </section>
     </aside>
 
     <main class="main">
+      <div class="scene-meta-bar">
+        <div class="left">
+          <span class="doc-num">DOC #<span id="doc-counter">001</span></span>
+          <span>// EXEC COMM</span>
+          <span id="defcon-readout" style="color:var(--warn)">DEFCON 3</span>
+        </div>
+        <div class="live-indicator">LIVE FEED</div>
+      </div>
       <div id="flash-log" class="flash-log"></div>
       <div id="scene-container"></div>
     </main>
   </div>
 
+  <div class="ticker">
+    <div class="ticker-label">⌬ INTEL WIRE</div>
+    <div class="ticker-content" id="ticker-content">
+      <span>0314 HRS — Soviet vessel sighted approaching quarantine line</span>
+      <span class="urgent">0421 HRS — DEFCON status updated: HOLD</span>
+      <span>0508 HRS — Allied forces on alert in West Berlin</span>
+      <span class="cool">0612 HRS — Backchannel established with Moscow embassy</span>
+      <span>0719 HRS — Civil defense drills reported in 47 U.S. cities</span>
+      <span class="urgent">0825 HRS — U-2 reconnaissance flight scheduled over Cuba</span>
+      <span>0903 HRS — Strategic Air Command on standby</span>
+      <span>1011 HRS — Pentagon: medium-range missiles operational in 14 days</span>
+      <span class="cool">1107 HRS — Robert Kennedy meets with Ambassador Dobrynin</span>
+      <span>1224 HRS — Public unaware. Press blackout holding.</span>
+      <span class="urgent">1336 HRS — Vatican calls for restraint from both sides</span>
+      <span>1441 HRS — Khrushchev letter intercepted — translation pending</span>
+    </div>
+  </div>
+
   <script>
+    // ===== AUDIO SYSTEM (Web Audio API — no external files) =====
+    let audioCtx = null;
+    let soundEnabled = true;
+
+    function initAudio() {
+      if (!audioCtx) {
+        try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+        catch(e) { soundEnabled = false; }
+      }
+    }
+
+    function playClack() {
+      if (!soundEnabled || !audioCtx) return;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(180 + Math.random() * 80, audioCtx.currentTime);
+      gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.04);
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.start(); osc.stop(audioCtx.currentTime + 0.05);
+    }
+
+    function playBeep(freq = 800, dur = 0.15, vol = 0.08) {
+      if (!soundEnabled || !audioCtx) return;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+      gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.start(); osc.stop(audioCtx.currentTime + dur);
+    }
+
+    function playStamp() {
+      if (!soundEnabled || !audioCtx) return;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(60, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(30, audioCtx.currentTime + 0.15);
+      gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.2);
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      osc.start(); osc.stop(audioCtx.currentTime + 0.2);
+    }
+
+    document.getElementById('sound-toggle').addEventListener('click', () => {
+      soundEnabled = !soundEnabled;
+      document.getElementById('sound-toggle').textContent = soundEnabled ? '🔊' : '🔇';
+      if (soundEnabled) initAudio();
+    });
+
+    document.body.addEventListener('click', initAudio, { once: true });
+
+    // ===== GAME STATE =====
     const game = {
-      stats: {
-        WORLD_TENSION: 2,
-        US_CREDIBILITY: 5,
-        DIPLOMATIC_SPACE: 5,
-        MILITARY_PRESSURE: 4,
-        PUBLIC_FEAR: 5
-      },
+      stats: { WORLD_TENSION: 2, US_CREDIBILITY: 5, DIPLOMATIC_SPACE: 5, MILITARY_PRESSURE: 4, PUBLIC_FEAR: 5 },
       flags: {
-        used_airstrike: false,
-        used_invasion: false,
-        announced_quarantine: false,
-        consulted_un: false,
-        secret_turkey_deal: false,
-        promised_no_invasion_of_cuba: false,
-        rejected_both_letters: false,
-        retaliated_after_incident: false
+        used_airstrike: false, used_invasion: false, announced_quarantine: false,
+        consulted_un: false, secret_turkey_deal: false, promised_no_invasion_of_cuba: false,
+        rejected_both_letters: false, retaliated_after_incident: false
       },
-      history: []
+      history: [],
+      docCount: 1,
+      day: 1
     };
 
-    const initialState = JSON.parse(JSON.stringify(game));
+    const initialState = JSON.parse(JSON.stringify({stats: game.stats, flags: game.flags}));
 
-    function clamp(num, min, max) {
-      return Math.max(min, Math.min(max, num));
-    }
-
-    function meterBlocks(value) {
-      const filled = '■'.repeat(value);
-      const empty = '□'.repeat(10 - value);
-      return filled + empty;
-    }
-
-    function toneClassForStat(key) {
-      if (key === 'WORLD_TENSION') return 'danger';
-      if (key === 'DIPLOMATIC_SPACE') return 'good';
-      if (key === 'MILITARY_PRESSURE' || key === 'PUBLIC_FEAR') return 'warn';
-      return 'accent';
-    }
+    function clamp(num, min, max) { return Math.max(min, Math.min(max, num)); }
 
     function prettyStatName(key) {
       const map = {
-        WORLD_TENSION: 'Global Threat',
-        US_CREDIBILITY: 'Power Image',
-        DIPLOMATIC_SPACE: 'Negotiate',
-        MILITARY_PRESSURE: 'Generals',
-        PUBLIC_FEAR: 'Panic'
+        WORLD_TENSION: 'Global Threat', US_CREDIBILITY: 'Power Image',
+        DIPLOMATIC_SPACE: 'Negotiate', MILITARY_PRESSURE: 'Generals', PUBLIC_FEAR: 'Panic'
       };
       return map[key] || key;
     }
 
+    function updateDefcon() {
+      const t = game.stats.WORLD_TENSION;
+      const overlay = document.getElementById('tension-overlay');
+      const defconEl = document.getElementById('defcon-readout');
+      let defcon = 5, cls = '';
+      if (t <= 2) { defcon = 5; }
+      else if (t <= 4) { defcon = 4; }
+      else if (t <= 6) { defcon = 3; }
+      else if (t <= 8) { defcon = 2; cls = 'high'; }
+      else { defcon = 1; cls = 'critical'; }
 
-    function stylizeText(text) {
-      return text
-        .replace(/\b(Cold War|nuclear war|missiles|Cuba|Turkey|Soviet Union|United States|quarantine|airstrike|invasion|diplomacy|DEFCON|U\.N\.|war)\b/g, '<span class="emph">$1</span>')
-        .replace(/\b(world ends?|millions die|apocalypse|catastrophe|shot down|retaliate|explode|collapse)\b/gi, '<span class="danger-text">$1</span>')
-        .replace(/\b(backchannel|compromise|restrained|restraint|survives?|survival|off-ramp)\b/gi, '<span class="cool-text">$1</span>')
-        .replace(/\b(I know\.|The problem is\.|That is the problem\.|And that is the horror of this whole thing\.|This is Cold War nightmare stuff\.)/g, '<span class="muted-ital">$1</span>');
+      defconEl.textContent = `DEFCON ${defcon}`;
+      defconEl.style.color = t >= 7 ? '#ff8b80' : t >= 5 ? 'var(--warn)' : 'var(--accent)';
+      overlay.className = 'tension-overlay ' + cls;
     }
 
-    function typewriterInto(el, rawText, speed = 14) {
+    // ===== TYPEWRITER (now preserves HTML tags in scripts) =====
+    function typewriterInto(el, rawHTML, speed = 14) {
       if (!el) return;
-      const text = rawText || '';
-      let i = 0;
       el.innerHTML = '';
       el.classList.add('type-cursor');
 
+      // Parse HTML into a structure of (text + tag) tokens, type out only visible chars
+      const temp = document.createElement('div');
+      temp.innerHTML = rawHTML;
+
+      const tokens = [];
+      function walk(node) {
+        if (node.nodeType === 3) { // text
+          const txt = node.textContent;
+          for (const ch of txt) tokens.push({type:'char', ch});
+        } else if (node.nodeType === 1) { // element
+          const open = node.cloneNode(false);
+          tokens.push({type:'open', html: getOpenTag(open)});
+          node.childNodes.forEach(walk);
+          tokens.push({type:'close', tag: node.tagName.toLowerCase()});
+        }
+      }
+      function getOpenTag(node) {
+        let s = '<' + node.tagName.toLowerCase();
+        for (const a of node.attributes) s += ` ${a.name}="${a.value}"`;
+        return s + '>';
+      }
+      temp.childNodes.forEach(walk);
+
+      let built = '';
+      let openStack = [];
+      let i = 0;
+      let charsTyped = 0;
+
       function tick() {
-        i += 2;
-        const current = text.slice(0, i);
-        el.innerHTML = stylizeText(current);
-        if (i < text.length) {
+        // emit characters in chunks of 2-3 to keep speed reasonable
+        let burst = 2;
+        while (burst > 0 && i < tokens.length) {
+          const t = tokens[i];
+          if (t.type === 'char') {
+            built += t.ch;
+            charsTyped++;
+            if (charsTyped % 4 === 0 && t.ch !== ' ' && t.ch !== '\n') playClack();
+            burst--;
+          } else if (t.type === 'open') {
+            built += t.html;
+            openStack.push(t.html);
+          } else if (t.type === 'close') {
+            built += `</${t.tag}>`;
+            openStack.pop();
+          }
+          i++;
+        }
+
+        // close any unclosed tags so display is valid mid-stream
+        let display = built;
+        // (we already appended close tags as we processed them; this is fine)
+
+        el.innerHTML = display;
+
+        if (i < tokens.length) {
           window.requestAnimationFrame(() => setTimeout(tick, speed));
         } else {
           el.classList.remove('type-cursor');
@@ -675,46 +1570,53 @@
     function updateSidebar() {
       Object.keys(game.stats).forEach((key) => {
         const val = game.stats[key];
-        document.getElementById(`stat-${key}`).textContent = val;
-        document.getElementById(`meter-${key}`).textContent = meterBlocks(val);
+        document.getElementById(`stat-${key}`).textContent = `${val}/10`;
+        document.getElementById(`meter-${key}`).style.width = `${val * 10}%`;
       });
+      updateDefcon();
+      document.getElementById('day-num').textContent = game.day;
 
       const historyList = document.getElementById('history-list');
       historyList.innerHTML = '';
       if (!game.history.length) {
         const div = document.createElement('div');
-        div.className = 'history-item';
+        div.className = 'history-empty';
         div.textContent = 'No calls made yet.';
         historyList.appendChild(div);
       } else {
-        game.history.slice().reverse().forEach(item => {
+        game.history.slice().reverse().forEach((item, idx) => {
           const div = document.createElement('div');
           div.className = 'history-item';
-          div.textContent = item;
+          const num = String(game.history.length - idx).padStart(2, '0');
+          div.innerHTML = `<strong style="color:var(--warn)">[${num}]</strong> ${item}`;
           historyList.appendChild(div);
         });
       }
+
+      document.getElementById('doc-counter').textContent = String(game.docCount).padStart(3, '0');
     }
 
     function flashChanges(effects = {}) {
       const flashLog = document.getElementById('flash-log');
       flashLog.innerHTML = '';
-
+      let any = false;
       Object.entries(effects).forEach(([key, change]) => {
         if (!change) return;
+        any = true;
         const pill = document.createElement('div');
         pill.className = `flash-pill ${change > 0 ? 'up' : 'down'}`;
-        pill.textContent = `${prettyStatName(key)} ${change > 0 ? '+' : ''}${change}`;
-
+        const arrow = change > 0 ? '▲' : '▼';
+        pill.innerHTML = `<span class="arrow">${arrow}</span> ${prettyStatName(key)} ${change > 0 ? '+' : ''}${change}`;
         flashLog.appendChild(pill);
 
         const wrap = document.getElementById(`wrap-${key}`);
         if (wrap) {
-          wrap.classList.remove('stat-flash');
+          wrap.classList.remove('flash');
           void wrap.offsetWidth;
-          wrap.classList.add('stat-flash');
+          wrap.classList.add('flash');
         }
       });
+      if (any) playBeep(500, 0.1, 0.05);
     }
 
     function applyEffects(effects = {}) {
@@ -724,13 +1626,42 @@
     }
 
     function applyFlags(flags = {}) {
-      Object.entries(flags).forEach(([key, val]) => {
-        game.flags[key] = val;
-      });
+      Object.entries(flags).forEach(([key, val]) => { game.flags[key] = val; });
     }
 
     function resolveNext(next) {
       return typeof next === 'function' ? next(game) : next;
+    }
+
+    function getChoiceIcon(choice) {
+      const lbl = (choice.label || '').toLowerCase();
+      if (lbl.match(/airstrike|hit|strike|bomb/)) return '✕';
+      if (lbl.match(/invade|invasion|troops|take/)) return '⚔';
+      if (lbl.match(/quarantine|search|warning|line/)) return '◉';
+      if (lbl.match(/talk|diplomacy|backchannel|negotiate|message|letter|promise/)) return '✉';
+      if (lbl.match(/u\.n\.|public/)) return '◬';
+      if (lbl.match(/wait|hold|pause|patient/)) return '⏸';
+      if (lbl.match(/retaliate|escalat|harder|deadline/)) return '▲';
+      if (lbl.match(/threat|ultimatum/)) return '⚡';
+      return '▶';
+    }
+
+    function getRiskDots(choice) {
+      // sum absolute danger of effects
+      const effects = choice.effects || {};
+      let risk = 0;
+      if (effects.WORLD_TENSION) risk += effects.WORLD_TENSION;
+      if (effects.MILITARY_PRESSURE) risk += effects.MILITARY_PRESSURE * 0.5;
+      if (effects.DIPLOMATIC_SPACE) risk -= effects.DIPLOMATIC_SPACE * 0.5;
+      let level = 'low';
+      if (risk >= 3) level = 'high';
+      else if (risk >= 1) level = 'med';
+      const filled = level === 'high' ? 3 : level === 'med' ? 2 : 1;
+      let html = '';
+      for (let i = 0; i < 3; i++) {
+        html += `<div class="risk-dot ${i < filled ? 'active ' + level : ''}"></div>`;
+      }
+      return html;
     }
 
     function renderScene(id) {
@@ -741,23 +1672,27 @@
         return;
       }
 
+      game.docCount++;
+      // Day advances roughly every 2 nodes, capped at 13
+      game.day = Math.min(13, 1 + Math.floor((game.docCount - 1) / 1.6));
+
       const imageHTML = scene.image ? `
         <div class="scene-visual-wrap">
           <div class="scene-visual">
-            <img src="${scene.image}" alt="${scene.title}">
+            <img src="${scene.image}" alt="${scene.title}" onerror="this.style.display='none'">
           </div>
-          <div class="scene-visual-caption">${scene.imageCaption || scene.title}</div>
+          <div class="scene-visual-caption">— ${scene.imageCaption || scene.title} // CIA ARCHIVE —</div>
         </div>` : '';
 
       const supportHTML = scene.support ? `
         <div class="support-box">
-          <div class="support-title">${scene.support.title}</div>
+          <div class="support-title">CONTEXT BRIEF // ${scene.support.title}</div>
           <div>${scene.support.text}</div>
         </div>` : '';
 
       const alertHTML = scene.alert ? `
         <div class="alert-box">
-          <div class="alert-title">${scene.alert.title}</div>
+          <div class="alert-title">URGENT // ${scene.alert.title}</div>
           <div>${scene.alert.text}</div>
         </div>` : '';
 
@@ -773,74 +1708,83 @@
 
       container.innerHTML = `
         <section class="panel scene">
-          <div class="eyebrow">${scene.eyebrow || 'Situation Room'}</div>
-          <h2>${scene.title}</h2>
+          <span class="scene-corner">${scene.eyebrow || 'SITUATION ROOM'}</span>
+          <div class="scene-subtitle">${scene.eyebrow || 'Situation Room'}</div>
+          <h2 class="scene-title">${scene.title}</h2>
           ${imageHTML}
-          <div class="scene-body type-cursor" id="typewriter-target" data-fulltext="${scene.text.replace(/"/g, '&quot;')}"></div>
+          <div class="scene-body" id="typewriter-target"></div>
           ${supportHTML}
           ${alertHTML}
           ${advisorHTML}
         </section>
+        <div class="choices-header">YOUR MOVE, MR. PRESIDENT</div>
         <section id="choices" class="choices"></section>
       `;
 
       const typeTarget = document.getElementById('typewriter-target');
-      if (typeTarget) {
-        const fullText = typeTarget.getAttribute('data-fulltext') || '';
-        typewriterInto(typeTarget, fullText, 12);
-      }
+      if (typeTarget) typewriterInto(typeTarget, scene.text, 12);
 
       const choicesWrap = document.getElementById('choices');
       scene.choices.forEach((choice) => {
         const btn = document.createElement('button');
         btn.className = 'choice';
+        const icon = getChoiceIcon(choice);
+        const risk = getRiskDots(choice);
         btn.innerHTML = `
-          <span class="choice-label">${choice.label}</span>
+          <div class="choice-risk" title="Risk level">${risk}</div>
+          <span class="choice-label"><span class="choice-icon">${icon}</span>${choice.label}</span>
           <span class="choice-desc">${choice.desc || ''}</span>
         `;
         btn.addEventListener('click', () => {
+          playStamp();
           applyEffects(choice.effects);
           applyFlags(choice.flags);
           flashChanges(choice.effects || {});
           game.history.push(`${scene.title}: ${choice.label}`);
           updateSidebar();
           const nextId = resolveNext(choice.next);
-          if (endings[nextId]) renderEnding(nextId);
-          else renderScene(nextId);
+          window.scrollTo({top: 0, behavior: 'smooth'});
+          setTimeout(() => {
+            if (endings[nextId]) renderEnding(nextId);
+            else renderScene(nextId);
+          }, 280);
         });
         choicesWrap.appendChild(btn);
       });
+
+      window.scrollTo({top: 0, behavior: 'instant'});
     }
 
     function renderEnding(id) {
       const ending = endings[id];
       const container = document.getElementById('scene-container');
-      const bannerClass = ending.tone === 'goodish' || ending.tone === 'mixed'
-        ? 'result-banner goodish'
-        : 'result-banner';
+      const isGood = ending.tone === 'goodish' || ending.tone === 'mixed';
+      const bannerClass = isGood ? 'result-banner goodish' : 'result-banner';
+      const sceneClass = isGood ? 'panel scene ending-good' : 'panel scene ending-bad';
+
       const imageHTML = ending.image ? `
         <div class="scene-visual-wrap">
           <div class="scene-visual">
-            <img src="${ending.image}" alt="${ending.title}">
+            <img src="${ending.image}" alt="${ending.title}" onerror="this.style.display='none'">
           </div>
-          <div class="scene-visual-caption">${ending.imageCaption || ending.title}</div>
+          <div class="scene-visual-caption">— ${ending.imageCaption || ending.title} // FINAL RECORD —</div>
         </div>` : '';
 
       container.innerHTML = `
-        <section class="panel scene">
+        <section class="${sceneClass}">
           <div class="${bannerClass}">${ending.result}</div>
-          <h2>${ending.title}</h2>
+          <h2 class="scene-title">${ending.title}</h2>
           ${imageHTML}
-          <div class="scene-body type-cursor" id="typewriter-target" data-fulltext="${ending.text.replace(/"/g, '&quot;')}"></div>
+          <div class="scene-body" id="typewriter-target"></div>
 
           <div class="summary-grid">
             <div class="summary-card">
               <h3>Final Readout</h3>
-              <div>Global Threat Level: <strong>${game.stats.WORLD_TENSION}</strong></div>
-              <div>U.S. Power Image: <strong>${game.stats.US_CREDIBILITY}</strong></div>
-              <div>Room to Negotiate: <strong>${game.stats.DIPLOMATIC_SPACE}</strong></div>
-              <div>Generals in Your Ear: <strong>${game.stats.MILITARY_PRESSURE}</strong></div>
-              <div>Panic Level: <strong>${game.stats.PUBLIC_FEAR}</strong></div>
+              <div>Global Threat: <strong>${game.stats.WORLD_TENSION}/10</strong></div>
+              <div>U.S. Power Image: <strong>${game.stats.US_CREDIBILITY}/10</strong></div>
+              <div>Negotiate: <strong>${game.stats.DIPLOMATIC_SPACE}/10</strong></div>
+              <div>Generals: <strong>${game.stats.MILITARY_PRESSURE}/10</strong></div>
+              <div>Panic: <strong>${game.stats.PUBLIC_FEAR}/10</strong></div>
             </div>
             <div class="summary-card">
               <h3>What This Shows</h3>
@@ -852,726 +1796,544 @@
             </div>
           </div>
 
-          <div class="reflection"><strong>Reflection:</strong> ${ending.reflection}</div>
+          <div class="reflection"><strong>REFLECTION PROMPT</strong>${ending.reflection}</div>
 
           <div class="footer-actions">
-            <button id="restart-btn" class="btn">Restart</button>
-            <button id="copy-btn" class="btn secondary">Copy Summary</button>
+            <button id="restart-btn" class="btn">↻ Restart Mission</button>
+            <button id="copy-btn" class="btn secondary">📋 Copy Summary</button>
           </div>
         </section>
       `;
 
-      const typeTarget = document.getElementById('typewriter-target');
-      if (typeTarget) {
-        const fullText = typeTarget.getAttribute('data-fulltext') || '';
-        typewriterInto(typeTarget, fullText, 12);
+      if (!isGood) {
+        document.body.classList.add('shake');
+        playBeep(120, 0.4, 0.12);
+        setTimeout(() => playBeep(80, 0.6, 0.12), 200);
+        setTimeout(() => document.body.classList.remove('shake'), 600);
+      } else {
+        playBeep(660, 0.18, 0.06);
+        setTimeout(() => playBeep(880, 0.25, 0.06), 180);
       }
+
+      const typeTarget = document.getElementById('typewriter-target');
+      if (typeTarget) typewriterInto(typeTarget, ending.text, 14);
 
       document.getElementById('restart-btn').addEventListener('click', restartGame);
       document.getElementById('copy-btn').addEventListener('click', async () => {
         const summary = `${ending.title}\n${ending.result}\n\nPath:\n- ${game.history.join('\n- ')}\n\nReflection:\n${ending.reflection}`;
         try {
           await navigator.clipboard.writeText(summary);
-          alert('Summary copied.');
+          alert('Summary copied to clipboard.');
         } catch {
           alert('Copy failed on this browser.');
         }
       });
+
+      window.scrollTo({top: 0, behavior: 'smooth'});
     }
 
     function restartGame() {
       game.stats = JSON.parse(JSON.stringify(initialState.stats));
       game.flags = JSON.parse(JSON.stringify(initialState.flags));
       game.history = [];
+      game.docCount = 1;
+      game.day = 1;
       document.getElementById('flash-log').innerHTML = '';
       updateSidebar();
       renderScene('OPENING');
     }
 
+    // ============================================================
+    //   HAND-STYLED SCRIPTS
+    //   Every node's `text` field is hand-marked-up HTML.
+    //   Tags used:
+    //     <em>     → italic typewriter (internal thoughts)
+    //     <strong> → big punchy display font (gut-punch lines)
+    //     <span class="hl">       → yellow highlighter swipe
+    //     <span class="danger">   → red glow (war/death/destruction)
+    //     <span class="cool">     → teal glow (peace/diplomacy/restraint)
+    //     <span class="quote">    → indented advisor/intercept quote
+    //     <span class="redact">   → black bar redaction (hover to reveal)
+    //     <span class="stamp-inline"> → red stamp box
+    // ============================================================
+
     const scenes = {
       OPENING: {
+        eyebrow: 'OCT 16, 1962 // 0900 HRS',
         title: 'The Photos Hit the Table',
-        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/us-constitution-workbook/refs/heads/main/node1.png',
-        imageCaption: 'Node 1 art',
-        text: `The photos hit the table, and the whole room goes dead quiet.
+        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/us-constitution-workbook/main/node1.png',
+        imageCaption: 'U-2 Reconnaissance — Cuba',
+        text: `The photos hit the table, and the whole room <strong>goes dead quiet</strong>.
 
-U.S. spy planes just confirmed it: the Soviet Union is building missile sites in Cuba.
+U.S. spy planes just confirmed it: the <span class="hl">Soviet Union is building missiles in Cuba</span>.
 
-Cuba is only about 90 miles from Florida.
+Cuba is only about <strong>90 miles from Florida</strong>.
 
-So let me say that plainly. If those missiles go live, they can hit the United States fast.
+<em>So let me say that plainly.</em> If those <span class="danger">missiles go live</span>, they can hit the United States fast.
 
-This is Cold War nightmare stuff. America and the Soviet Union already fear each other. We both have nuclear weapons. We both think the other side is trying to get ahead.
+This is <span class="hl">Cold War nightmare stuff</span>. America and the Soviet Union already fear each other. We both have <span class="danger">nuclear weapons</span>. We both think the other side is trying to get ahead.
 
 Now I have to answer that threat.
 
-If I go too soft, I look weak.
+<em>If I go too soft</em>, I look weak.
 
-If I go too hard, I could start a nuclear war.`,
+<em>If I go too hard</em>, I could start a <span class="danger">nuclear war</span>.`,
         support: {
-          title: 'Quick context',
-          text: 'The Cold War was a long power struggle between the United States and the Soviet Union. Both sides had nuclear weapons. That meant fear, pressure, and bad choices could get deadly fast.'
+          title: 'QUICK CONTEXT',
+          text: 'The Cold War was a long power struggle between the U.S. and the Soviet Union. Both sides had nuclear weapons. That meant fear, pressure, and bad choices could get deadly fast.'
         },
         advisors: [
-          { role: 'General', text: '“Hit the sites before they’re ready.”' },
-          { role: 'Diplomat', text: '“Slow down. Once bombs drop, this gets way harder to control.”' },
-          { role: 'Public Mood', text: '“America expects you to look strong.”' }
+          { role: 'GENERAL', text: '"Hit the sites before they\'re ready."' },
+          { role: 'DIPLOMAT', text: '"Slow down. Once bombs drop, this gets way harder to control."' },
+          { role: 'PUBLIC MOOD', text: '"America expects you to look strong."' }
         ],
         choices: [
-          {
-            label: 'Airstrike',
-            desc: 'Fast. Aggressive. Could spiral instantly.',
-            next: 'AIRSTRIKE',
+          { label: 'Airstrike', desc: 'Fast. Aggressive. Could spiral instantly.', next: 'AIRSTRIKE',
             effects: { WORLD_TENSION: 3, US_CREDIBILITY: 2, DIPLOMATIC_SPACE: -2, MILITARY_PRESSURE: 1 },
-            flags: { used_airstrike: true }
-          },
-          {
-            label: 'Invade Cuba',
-            desc: 'Maximum force. Maximum risk.',
-            next: 'INVASION',
+            flags: { used_airstrike: true } },
+          { label: 'Invade Cuba', desc: 'Maximum force. Maximum risk.', next: 'INVASION',
             effects: { WORLD_TENSION: 4, US_CREDIBILITY: 2, DIPLOMATIC_SPACE: -3, MILITARY_PRESSURE: 2 },
-            flags: { used_invasion: true }
-          },
-          {
-            label: 'Quarantine',
-            desc: 'Strong middle move. Still dangerous.',
-            next: 'QUARANTINE',
+            flags: { used_invasion: true } },
+          { label: 'Quarantine', desc: 'Strong middle move. Still dangerous.', next: 'QUARANTINE',
             effects: { WORLD_TENSION: 2, US_CREDIBILITY: 1, DIPLOMATIC_SPACE: 1, MILITARY_PRESSURE: 1 },
-            flags: { announced_quarantine: true }
-          },
-          {
-            label: 'Talk First',
-            desc: 'Safer at first. Might make you look weak.',
-            next: 'DIPLOMACY',
-            effects: { WORLD_TENSION: 1, US_CREDIBILITY: -1, DIPLOMATIC_SPACE: 2, PUBLIC_FEAR: 1 }
-          }
+            flags: { announced_quarantine: true } },
+          { label: 'Talk First', desc: 'Safer at first. Might make you look weak.', next: 'DIPLOMACY',
+            effects: { WORLD_TENSION: 1, US_CREDIBILITY: -1, DIPLOMATIC_SPACE: 2, PUBLIC_FEAR: 1 } }
         ]
       },
 
       AIRSTRIKE: {
+        eyebrow: 'PENTAGON BRIEFING',
         title: 'Hit First',
-        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/us-constitution-workbook/refs/heads/main/node2.png',
-        imageCaption: 'Node 2 art',
-        text: `I could hit Cuba right now. Blow up the missile sites before they’re ready.
+        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/us-constitution-workbook/main/node2.png',
+        imageCaption: 'Strategic Air Command Operations',
+        text: `I could hit Cuba right now. Blow up the missiles before they're ready.
 
-It sounds simple.
+<em>It sounds simple.</em>
 
-It is not simple.
+<strong>It is not simple.</strong>
 
 We might miss some sites.
 
-We might kill Soviet troops.
+We might <span class="danger">kill Soviet troops</span>.
 
-We might turn Cuba into the spark that lights up Berlin, Europe, and way more than Europe.
+We might turn Cuba into the <span class="hl">spark that lights up Berlin</span>, Europe, and way more than Europe.
 
-This is the trap with a military answer. It looks clean for about five seconds.
+This is the trap with a military answer. <em>It looks clean for about five seconds.</em>
 
-Then people start dying, and everybody starts reacting.`,
-        alert: {
-          title: 'Danger',
-          text: 'Once the U.S. bombs Cuba, the Soviets may not see this as a limited move. They may see it as the start of a bigger war.'
-        },
+Then people start dying, and everybody starts <span class="danger">reacting</span>.`,
+        alert: { title: 'DANGER', text: 'Once the U.S. bombs Cuba, the Soviet Union may not see this as a limited move. They may see it as the start of a bigger war.' },
         advisors: [
-          { role: 'General', text: '“Finish it fast. Don’t hesitate now.”' },
-          { role: 'Diplomat', text: '“If this goes wrong, we may lose control of the whole crisis.”' }
+          { role: 'GENERAL', text: '"Finish it fast. Don\'t hesitate now."' },
+          { role: 'DIPLOMAT', text: '"If this goes wrong, we may lose control of the whole crisis."' }
         ],
         choices: [
-          {
-            label: 'Hit Again',
-            desc: 'Double down and hope force solves what force just made worse.',
-            next: 'SECOND_STRIKE',
-            effects: { WORLD_TENSION: 3, DIPLOMATIC_SPACE: -2 }
-          },
-          {
-            label: 'Go to the U.N.',
-            desc: 'Try diplomacy after violence and hope the world helps calm things down.',
-            next: 'UN_AFTER_STRIKE',
-            effects: { US_CREDIBILITY: -1, DIPLOMATIC_SPACE: 1 },
-            flags: { consulted_un: true }
-          },
-          {
-            label: 'Prep an Invasion',
-            desc: 'Move toward an even bigger military answer.',
-            next: 'INVASION_AFTER_STRIKE',
-            effects: { WORLD_TENSION: 2, MILITARY_PRESSURE: 2 }
-          }
+          { label: 'Hit Again', desc: 'Double down and hope force solves what force just made worse.', next: 'SECOND_STRIKE',
+            effects: { WORLD_TENSION: 3, DIPLOMATIC_SPACE: -2 } },
+          { label: 'Go to the U.N.', desc: 'Try diplomacy after violence and hope the world helps calm things down.', next: 'UN_AFTER_STRIKE',
+            effects: { US_CREDIBILITY: -1, DIPLOMATIC_SPACE: 1 }, flags: { consulted_un: true } },
+          { label: 'Prep an Invasion', desc: 'Move toward an even bigger military answer.', next: 'INVASION_AFTER_STRIKE',
+            effects: { WORLD_TENSION: 2, MILITARY_PRESSURE: 2 } }
         ]
       },
 
       INVASION: {
+        eyebrow: 'JOINT CHIEFS // INVASION PLANNING',
         title: 'Take the Island',
-        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/us-constitution-workbook/refs/heads/main/node3.jpg',
-        imageCaption: 'Node 3 art',
-        text: `If the missiles are in Cuba, maybe the only real answer is to take Cuba.
+        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/us-constitution-workbook/main/node3.jpg',
+        imageCaption: 'Marine Forces — Caribbean Staging',
+        text: `If the missiles are in Cuba, maybe the only real answer is to <span class="hl">take Cuba</span>.
 
-That means invasion.
+<strong>That means invasion.</strong>
 
 Some people around me love this idea. It removes the missiles. It humiliates Castro. It tells the Soviets not to test us in our own backyard.
 
 But invasion is not surgery.
 
-It is blood, chaos, and momentum.
+<em>It is blood, chaos, and momentum.</em>
 
 And once American troops start killing Soviet troops, this stops being about one island.
 
-Now it is a superpower war.`,
-        support: {
-          title: 'Why this was terrifying',
-          text: 'The U.S. had already backed the failed Bay of Pigs invasion in 1961. Cuba and the Soviet Union expected another invasion might happen.'
-        },
+<strong>Now it is a superpower war.</strong>`,
+        support: { title: 'WHY THIS WAS TERRIFYING', text: 'The U.S. had already backed the failed Bay of Pigs invasion in 1961. Cuba and the Soviet Union expected another invasion might happen.' },
         advisors: [
-          { role: 'General', text: '“If you’re serious, go all the way.”' },
-          { role: 'JFK brain', text: '“What if Soviet commanders in Cuba use nukes once we land?”' }
+          { role: 'GENERAL', text: '"If you\'re serious, go all the way."' },
+          { role: 'JFK BRAIN', text: '"What if Soviet commanders in Cuba use nukes once we land?"' }
         ],
         choices: [
-          {
-            label: 'Invade Now',
-            desc: 'Go all in and hope sheer force ends it before it gets worse.',
-            next: 'E1_NUCLEAR_FIRE',
-            effects: { WORLD_TENSION: 4, DIPLOMATIC_SPACE: -3 }
-          },
-          {
-            label: 'Ultimatum',
-            desc: 'Threaten invasion, but leave a tiny opening to back down.',
-            next: 'ULTIMATUM',
-            effects: { US_CREDIBILITY: 1, DIPLOMATIC_SPACE: 1, WORLD_TENSION: 1 }
-          },
-          {
-            label: 'Threat + Secret Talks',
-            desc: 'Hold the knife up while quietly trying to cut a deal.',
-            next: 'INVASION_SECRET_TALKS',
-            effects: { DIPLOMATIC_SPACE: 2, MILITARY_PRESSURE: 1 }
-          }
+          { label: 'Invade Now', desc: 'Go all in and hope sheer force ends it before it gets worse.', next: 'E1_NUCLEAR_FIRE',
+            effects: { WORLD_TENSION: 4, DIPLOMATIC_SPACE: -3 } },
+          { label: 'Ultimatum', desc: 'Threaten invasion, but leave a tiny opening to back down.', next: 'ULTIMATUM',
+            effects: { US_CREDIBILITY: 1, DIPLOMATIC_SPACE: 1, WORLD_TENSION: 1 } },
+          { label: 'Threat + Secret Talks', desc: 'Hold the knife up while quietly trying to cut a deal.', next: 'INVASION_SECRET_TALKS',
+            effects: { DIPLOMATIC_SPACE: 2, MILITARY_PRESSURE: 1 } }
         ]
       },
 
       QUARANTINE: {
+        eyebrow: 'NAVAL OPERATIONS',
         title: 'Draw the Line at Sea',
-        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/us-constitution-workbook/refs/heads/main/node4.png',
-        imageCaption: 'Node 4 art',
-        text: `I decide not to bomb Cuba. Not yet.
+        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/us-constitution-workbook/main/node4.png',
+        imageCaption: 'U.S. Navy Quarantine Line — Atlantic',
+        text: `I decide not to bomb Cuba. <em>Not yet.</em>
 
-Instead, I set up a naval quarantine.
+Instead, I set up a <span class="hl">naval quarantine</span>.
 
 That means U.S. warships will stop Soviet ships from bringing more military gear into Cuba.
 
-It’s a tough move, but not the toughest move. I’m showing strength without firing the first shot.
+It's a tough move, but not the toughest move. <em>I'm showing strength without firing the first shot.</em>
 
-At least that’s the idea.
+At least that's the idea.
 
-Because here’s the problem: if a Soviet ship refuses to stop, my Navy has to decide what happens next.
+Because here's <strong>the problem</strong>: if a Soviet ship refuses to stop, my Navy has to decide what happens next.
 
-And once armed men start staring each other down in the ocean, things can go bad real fast.`,
-        support: {
-          title: 'Real history',
-          text: 'Kennedy chose a quarantine in real life. It was a middle path. Not weak, not immediate bombing.'
-        },
+And once <span class="danger">armed men start staring each other down in the ocean</span>, things can go bad <em>real fast</em>.`,
+        support: { title: 'REAL HISTORY', text: 'Kennedy chose a quarantine in real life. It was a middle path. Not weak, not immediate bombing.' },
         advisors: [
-          { role: 'General', text: '“If they cross the line, stop them.”' },
-          { role: 'Diplomat', text: '“This gives us time. Time matters.”' }
+          { role: 'GENERAL', text: '"If they cross the line, stop them."' },
+          { role: 'DIPLOMAT', text: '"This gives us time. Time matters."' }
         ],
         choices: [
-          {
-            label: 'Search Every Ship',
-            desc: 'Maximum control. Serious risk of a direct clash.',
-            next: 'SEARCH_SHIPS',
-            effects: { WORLD_TENSION: 2, US_CREDIBILITY: 1, DIPLOMATIC_SPACE: -1 }
-          },
-          {
-            label: 'Backchannel Deal',
-            desc: 'Look tough in public. Get realistic in private.',
-            next: 'BACKCHANNEL',
-            effects: { WORLD_TENSION: 1, DIPLOMATIC_SPACE: 2 }
-          },
-          {
-            label: 'Let Some Pass',
-            desc: 'Lower the risk now, but people may say you blinked.',
-            next: 'LET_SHIPS_PASS',
-            effects: { WORLD_TENSION: -1, US_CREDIBILITY: -2, DIPLOMATIC_SPACE: 1 }
-          }
+          { label: 'Search Every Ship', desc: 'Maximum control. Serious risk of a direct clash.', next: 'SEARCH_SHIPS',
+            effects: { WORLD_TENSION: 2, US_CREDIBILITY: 1, DIPLOMATIC_SPACE: -1 } },
+          { label: 'Backchannel Deal', desc: 'Look tough in public. Get realistic in private.', next: 'BACKCHANNEL',
+            effects: { WORLD_TENSION: 1, DIPLOMATIC_SPACE: 2 } },
+          { label: 'Let Some Pass', desc: 'Lower the risk now, but people may say you blinked.', next: 'LET_SHIPS_PASS',
+            effects: { WORLD_TENSION: -1, US_CREDIBILITY: -2, DIPLOMATIC_SPACE: 1 } }
         ]
       },
 
       DIPLOMACY: {
+        eyebrow: 'STATE DEPARTMENT',
         title: 'Talk Before Bombs',
-        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/us-constitution-workbook/refs/heads/main/node5.jpg',
-        imageCaption: 'Node 5 art',
-        text: `I do not bomb. I do not send ships first. I try words.
+        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/us-constitution-workbook/main/node5.jpg',
+        imageCaption: 'Diplomatic Channels — Washington/Moscow',
+        text: `I do not bomb. I do not send ships first. <strong>I try words.</strong>
 
-That sounds humane. Responsible. Maybe even smart.
+<em>That sounds humane. Responsible. Maybe even smart.</em>
 
-It also sounds weak to a lot of people in this room.
+It also sounds <span class="danger">weak</span> to a lot of people in this room.
 
-Every hour I spend talking is another hour those missile sites may be getting stronger.
+Every hour I spend talking is another hour those <span class="hl">missile sites may be getting stronger</span>.
 
-That is the problem.
+<strong>That is the problem.</strong>
 
-Diplomacy can save lives.
+<span class="cool">Diplomacy</span> can save lives.
 
-But diplomacy without pressure can also look like permission.`,
+But <span class="cool">diplomacy</span> without pressure can also look like <em>permission</em>.`,
         advisors: [
-          { role: 'Diplomat', text: '“You still have room to stop this without blood.”' },
-          { role: 'General', text: '“Or you’re giving them time.”' }
+          { role: 'DIPLOMAT', text: '"You still have room to stop this without blood."' },
+          { role: 'GENERAL', text: '"Or you\'re giving them time."' }
         ],
         choices: [
-          {
-            label: 'Keep Talking',
-            desc: 'Trust negotiation and restraint.',
-            next: 'DIPLOMACY_ONLY',
-            effects: { US_CREDIBILITY: -2, DIPLOMATIC_SPACE: 1, WORLD_TENSION: 1 }
-          },
-          {
-            label: 'Shift to Quarantine',
-            desc: 'Move from words alone to a harder middle move.',
-            next: 'BACKCHANNEL',
-            effects: { WORLD_TENSION: 1, US_CREDIBILITY: 1, DIPLOMATIC_SPACE: 1 },
-            flags: { announced_quarantine: true }
-          },
-          {
-            label: 'Threaten an Airstrike',
-            desc: 'Talk, but make sure everyone sees the gun on the table.',
-            next: 'THREATEN_STRIKE',
-            effects: { WORLD_TENSION: 2, US_CREDIBILITY: 1, DIPLOMATIC_SPACE: -1 }
-          }
+          { label: 'Keep Talking', desc: 'Trust negotiation and restraint.', next: 'DIPLOMACY_ONLY',
+            effects: { US_CREDIBILITY: -2, DIPLOMATIC_SPACE: 1, WORLD_TENSION: 1 } },
+          { label: 'Shift to Quarantine', desc: 'Move from words alone to a harder middle move.', next: 'BACKCHANNEL',
+            effects: { WORLD_TENSION: 1, US_CREDIBILITY: 1, DIPLOMATIC_SPACE: 1 }, flags: { announced_quarantine: true } },
+          { label: 'Threaten an Airstrike', desc: 'Talk, but make sure everyone sees the gun on the table.', next: 'THREATEN_STRIKE',
+            effects: { WORLD_TENSION: 2, US_CREDIBILITY: 1, DIPLOMATIC_SPACE: -1 } }
         ]
       },
 
       SECOND_STRIKE: {
+        eyebrow: 'ESCALATION',
         title: 'Double Down',
-        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/us-constitution-workbook/refs/heads/main/node6.png',
-        imageCaption: 'Node 6 art',
-        text: `The first strike did not solve it cleanly.
+        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/us-constitution-workbook/main/node6.png',
+        imageCaption: 'Continued Air Operations',
+        text: `The first strike <em>did not solve it cleanly</em>.
 
-So now the pressure is to go harder.
+So now the pressure is to <strong>go harder</strong>.
 
-More planes. More bombs. More certainty that this is turning from crisis into war.
+More planes. More bombs. More certainty that this is turning from <span class="hl">crisis into war</span>.
 
-The logic is brutal: if the first attack did not fully solve it, then maybe a bigger one will.
+The logic is brutal: <em>if the first attack did not fully solve it, then maybe a bigger one will.</em>
 
-That is how people talk when things are slipping out of control.`,
-        alert: {
-          title: 'The spiral',
-          text: 'Every new attack makes it harder to stop. Escalation has momentum.'
-        },
+<strong>That is how people talk when things are slipping out of control.</strong>`,
+        alert: { title: 'THE SPIRAL', text: 'Every new attack makes it harder to stop. Escalation has momentum.' },
         choices: [
-          {
-            label: 'Keep Escalating',
-            desc: 'Push until nobody can accuse you of backing down.',
-            next: (state) => state.stats.WORLD_TENSION >= 8 ? 'E1_NUCLEAR_FIRE' : 'E2_MISCALCULATION'
-          },
-          {
-            label: 'Pull Back and Ask for Help',
-            desc: 'Try to drag this back from the edge.',
-            next: 'WORLD_HOLDS_BREATH',
-            effects: { US_CREDIBILITY: -1, DIPLOMATIC_SPACE: 1 },
-            flags: { consulted_un: true }
-          }
+          { label: 'Keep Escalating', desc: 'Push until nobody can accuse you of backing down.',
+            next: (state) => state.stats.WORLD_TENSION >= 8 ? 'E1_NUCLEAR_FIRE' : 'E2_MISCALCULATION' },
+          { label: 'Pull Back and Ask for Help', desc: 'Try to drag this back from the edge.', next: 'WORLD_HOLDS_BREATH',
+            effects: { US_CREDIBILITY: -1, DIPLOMATIC_SPACE: 1 }, flags: { consulted_un: true } }
         ]
       },
 
       UN_AFTER_STRIKE: {
+        eyebrow: 'UNITED NATIONS // NEW YORK',
         title: 'Violence First, Diplomacy Second',
-        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/us-constitution-workbook/refs/heads/main/node7.png',
-        imageCaption: 'Node 7 art',
-        text: `I try diplomacy after violence.
+        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/us-constitution-workbook/main/node7.png',
+        imageCaption: 'Security Council Emergency Session',
+        text: `I try <span class="cool">diplomacy</span> after <span class="danger">violence</span>.
 
-The U.N. might help buy time. It might help slow the panic. It might make me look like I still have some control.
+The U.N. might help buy time. It might help slow the panic. <em>It might make me look like I still have some control.</em>
 
-Or it might just make me look like I threw a punch and then asked the room to calm down.
+<strong>Or</strong> it might just make me look like I threw a punch and then asked the room to <em>calm down</em>.
 
-Either way, I’m trying to cool off a fire I helped start.`,
+Either way, I'm trying to <span class="hl">cool off a fire I helped start</span>.`,
         choices: [
-          {
-            label: 'Pause if the Soviets Pause',
-            desc: 'Offer a narrow off-ramp and hope it still exists.',
-            next: 'WORLD_HOLDS_BREATH',
-            effects: { DIPLOMATIC_SPACE: 1 }
-          },
-          {
-            label: 'Use the U.N. as Cover',
-            desc: 'Talk publicly while quietly moving toward war.',
-            next: 'E2_MISCALCULATION',
-            effects: { WORLD_TENSION: 2, MILITARY_PRESSURE: 1 }
-          }
+          { label: 'Pause if the Soviets Pause', desc: 'Offer a narrow off-ramp and hope it still exists.', next: 'WORLD_HOLDS_BREATH',
+            effects: { DIPLOMATIC_SPACE: 1 } },
+          { label: 'Use the U.N. as Cover', desc: 'Talk publicly while quietly moving toward war.', next: 'E2_MISCALCULATION',
+            effects: { WORLD_TENSION: 2, MILITARY_PRESSURE: 1 } }
         ]
       },
 
       INVASION_AFTER_STRIKE: {
+        eyebrow: 'COMBINED FORCES',
         title: 'Bombs Were Not Enough',
-        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/us-constitution-workbook/refs/heads/main/node8.png',
-        imageCaption: 'Node 8 art',
+        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/us-constitution-workbook/main/node8.png',
+        imageCaption: 'Ground Forces Mobilization',
         text: `Bombing was not enough, so now troops are moving too.
 
-The room feels more certain.
+The room feels <em>more certain</em>.
 
-I feel less certain.
+<strong>I feel less certain.</strong>
 
-That’s the weird part. The louder the hawks get, the more I can feel how close this is getting to something nobody can control.`,
+That's the weird part. <em>The louder the hawks get, the more I can feel how close this is getting to something nobody can control.</em>`,
         choices: [
-          {
-            label: 'Invade Now',
-            desc: 'Finish the crisis with brute force.',
-            next: 'E1_NUCLEAR_FIRE'
-          },
-          {
-            label: 'Wait for Moscow',
-            desc: 'Hold for one more reply and pray that matters.',
-            next: 'LETTERS',
-            effects: { DIPLOMATIC_SPACE: 1 }
-          }
+          { label: 'Invade Now', desc: 'Finish the crisis with brute force.', next: 'E1_NUCLEAR_FIRE' },
+          { label: 'Wait for Moscow', desc: 'Hold for one more reply and pray that matters.', next: 'LETTERS',
+            effects: { DIPLOMATIC_SPACE: 1 } }
         ]
       },
 
       ULTIMATUM: {
-        title: 'A Threat With a Clock on It',
-        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/us-constitution-workbook/refs/heads/main/node9.png',
-        imageCaption: 'Node 9 art',
-        text: `I threaten invasion, but I do not start it yet.
+        eyebrow: 'WHITE HOUSE STATEMENT',
+        title: 'A Threat With a Clock On It',
+        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/us-constitution-workbook/main/node9.png',
+        imageCaption: 'Presidential Address Drafting',
+        text: `I threaten <span class="hl">invasion</span>, but I do not start it yet.
 
-That buys me a little time.
+<em>That buys me a little time.</em>
 
-It also makes the crisis even more tense, because now there is a countdown in the room whether I say one out loud or not.`,
+It also makes the crisis even more tense, because now there is a <strong>countdown in the room</strong> whether I say one out loud or not.`,
         choices: [
-          {
-            label: 'Set a Hard Deadline',
-            desc: 'Force a fast answer under maximum pressure.',
-            next: 'WORLD_HOLDS_BREATH',
-            effects: { WORLD_TENSION: 2, PUBLIC_FEAR: 1 }
-          },
-          {
-            label: 'Keep It Loose',
-            desc: 'Threaten force, but leave a little space to talk.',
-            next: 'WORLD_HOLDS_BREATH',
-            effects: { US_CREDIBILITY: -1, DIPLOMATIC_SPACE: 1 }
-          }
+          { label: 'Set a Hard Deadline', desc: 'Force a fast answer under maximum pressure.', next: 'WORLD_HOLDS_BREATH',
+            effects: { WORLD_TENSION: 2, PUBLIC_FEAR: 1 } },
+          { label: 'Keep It Loose', desc: 'Threaten force, but leave a little space to talk.', next: 'WORLD_HOLDS_BREATH',
+            effects: { US_CREDIBILITY: -1, DIPLOMATIC_SPACE: 1 } }
         ]
       },
 
       INVASION_SECRET_TALKS: {
+        eyebrow: 'BACKCHANNEL // CLASSIFIED',
         title: 'Knife in One Hand, Message in the Other',
-        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/us-constitution-workbook/refs/heads/main/node10.png',
-        imageCaption: 'Node 10 art',
+        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/us-constitution-workbook/main/node10.png',
+        imageCaption: 'Private Communications — Embassy Channel',
         text: `I hold a knife in one hand and a message in the other.
 
-This might be strategy.
+<em>This might be strategy.</em>
 
-It might also be hypocrisy.
+<em>It might also be hypocrisy.</em>
 
-Probably both.
+<strong>Probably both.</strong>
 
-The military threat is real. The diplomatic offer is real too. The question is whether the Soviets believe any of it.`,
+The military threat is real. The <span class="cool">diplomatic offer</span> is real too. <span class="hl">The question is whether the Soviets believe any of it.</span>`,
         choices: [
-          {
-            label: 'Promise No Invasion',
-            desc: 'Give them a reason to believe compromise could work.',
-            next: 'WORLD_HOLDS_BREATH',
-            effects: { DIPLOMATIC_SPACE: 2 },
-            flags: { promised_no_invasion_of_cuba: true }
-          },
-          {
-            label: 'Demand Public Humiliation',
-            desc: 'Push for a win so total the Soviets may never take it.',
-            next: 'E2_MISCALCULATION',
-            effects: { DIPLOMATIC_SPACE: -2, WORLD_TENSION: 2 }
-          }
+          { label: 'Promise No Invasion', desc: 'Give them a reason to believe compromise could work.', next: 'WORLD_HOLDS_BREATH',
+            effects: { DIPLOMATIC_SPACE: 2 }, flags: { promised_no_invasion_of_cuba: true } },
+          { label: 'Demand Public Humiliation', desc: 'Push for a win so total the Soviets may never take it.', next: 'E2_MISCALCULATION',
+            effects: { DIPLOMATIC_SPACE: -2, WORLD_TENSION: 2 } }
         ]
       },
 
       SEARCH_SHIPS: {
+        eyebrow: 'NAVAL ENFORCEMENT',
         title: 'Every Ship. Every Time.',
-        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/us-constitution-workbook/refs/heads/main/node11.png',
-        imageCaption: 'Node 11 art',
-        text: `I tell the Navy to stop and search every Soviet ship.
+        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/us-constitution-workbook/main/node11.png',
+        imageCaption: 'USN Boarding Operations',
+        text: `I tell the Navy to <span class="hl">stop and search every Soviet ship</span>.
 
-That sounds strong.
+<em>That sounds strong.</em>
 
-It also sounds like the kind of move that leads to one nervous man making one terrible choice with a gun in his hand.`,
+It also sounds like the kind of move that leads to <strong>one nervous man making one terrible choice</strong> with a gun in his hand.`,
         choices: [
-          {
-            label: 'Warning Shots',
-            desc: 'Push right up against a direct clash.',
-            next: 'WORLD_HOLDS_BREATH',
-            effects: { WORLD_TENSION: 2 }
-          },
-          {
-            label: 'Hold Fire',
-            desc: 'Stay hard without being the first side to shoot.',
-            next: 'WORLD_HOLDS_BREATH',
-            effects: { US_CREDIBILITY: 1, DIPLOMATIC_SPACE: 1 }
-          }
+          { label: 'Warning Shots', desc: 'Push right up against a direct clash.', next: 'WORLD_HOLDS_BREATH',
+            effects: { WORLD_TENSION: 2 } },
+          { label: 'Hold Fire', desc: 'Stay hard without being the first side to shoot.', next: 'WORLD_HOLDS_BREATH',
+            effects: { US_CREDIBILITY: 1, DIPLOMATIC_SPACE: 1 } }
         ]
       },
 
       BACKCHANNEL: {
+        eyebrow: 'OVAL OFFICE // PRIVATE LINE',
         title: 'Public Show, Private Reality',
-        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/us-constitution-workbook/refs/heads/main/node12.png',
-        imageCaption: 'Node 12 art',
+        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/us-constitution-workbook/main/node12.png',
+        imageCaption: 'Encrypted Channel — Moscow Direct',
         text: `In public, I hold the line.
 
-In private, I open a backchannel.
+In private, I open a <span class="cool">backchannel</span>.
 
-That is what this job is turning into: looking tough out front while quietly trying to keep the world from ending in the back room.`,
+<em>That is what this job is turning into</em>: looking <strong>tough out front</strong> while quietly trying to <span class="hl">keep the world from ending in the back room</span>.`,
         choices: [
-          {
-            label: 'Promise Not to Invade Cuba',
-            desc: 'Give the Soviets a real reason to back down.',
-            next: 'WORLD_HOLDS_BREATH',
-            effects: { DIPLOMATIC_SPACE: 2 },
-            flags: { promised_no_invasion_of_cuba: true }
-          },
-          {
-            label: 'Hold That Back',
-            desc: 'Keep more leverage, even if it keeps the fear higher.',
-            next: 'WORLD_HOLDS_BREATH',
-            effects: { US_CREDIBILITY: 1, WORLD_TENSION: 1 }
-          }
+          { label: 'Promise Not to Invade Cuba', desc: 'Give the Soviets a real reason to back down.', next: 'WORLD_HOLDS_BREATH',
+            effects: { DIPLOMATIC_SPACE: 2 }, flags: { promised_no_invasion_of_cuba: true } },
+          { label: 'Hold That Back', desc: 'Keep more leverage, even if it keeps the fear higher.', next: 'WORLD_HOLDS_BREATH',
+            effects: { US_CREDIBILITY: 1, WORLD_TENSION: 1 } }
         ]
       },
 
       LET_SHIPS_PASS: {
+        eyebrow: 'NAVAL STAND-DOWN',
         title: 'A Breath That Looks Weak',
-        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/us-constitution-workbook/refs/heads/main/node13.png',
-        imageCaption: 'Node 13 art',
+        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/us-constitution-workbook/main/node13.png',
+        imageCaption: 'Soviet Vessel Crossing Quarantine Line',
         text: `I ease up to avoid a direct naval fight.
 
-For one second, the world breathes.
+For one second, the world <span class="cool">breathes</span>.
 
-The hawks around me do not.
+<strong>The hawks around me do not.</strong>
 
-To them, every Soviet ship that keeps moving is proof that I blinked.`,
+To them, every Soviet ship that keeps moving is proof that <em>I blinked</em>.`,
         choices: [
-          {
-            label: 'Come Back Harder',
-            desc: 'Recover politically with a stronger public line.',
-            next: 'WORLD_HOLDS_BREATH',
-            effects: { US_CREDIBILITY: 1, PUBLIC_FEAR: 1 }
-          },
-          {
-            label: 'Lean Into Diplomacy',
-            desc: 'Take the political hit and try the quieter path.',
-            next: 'LETTERS',
-            effects: { DIPLOMATIC_SPACE: 1, US_CREDIBILITY: -1 }
-          }
+          { label: 'Come Back Harder', desc: 'Recover politically with a stronger public line.', next: 'WORLD_HOLDS_BREATH',
+            effects: { US_CREDIBILITY: 1, PUBLIC_FEAR: 1 } },
+          { label: 'Lean Into Diplomacy', desc: 'Take the political hit and try the quieter path.', next: 'LETTERS',
+            effects: { DIPLOMATIC_SPACE: 1, US_CREDIBILITY: -1 } }
         ]
       },
 
       DIPLOMACY_ONLY: {
+        eyebrow: 'STATE DEPT // EXTENDED TALKS',
         title: 'Still Talking While the Clock Runs',
-        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/us-constitution-workbook/refs/heads/main/node14.png',
-        imageCaption: 'Node 14 art',
-        text: `I keep talking while the missile sites keep getting stronger.
+        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/us-constitution-workbook/main/node14.png',
+        imageCaption: 'Continued Negotiation Sessions',
+        text: `I keep talking while the missiles keep getting <span class="danger">stronger</span>.
 
-That is the problem.
+<strong>That is the problem.</strong>
 
-I may be doing the morally safer thing in the moment.
+<em>I may be doing the morally safer thing in the moment.</em>
 
-I may also be letting the crisis get worse right in front of me.`,
+<em>I may also be letting the crisis get worse right in front of me.</em>`,
         choices: [
-          {
-            label: 'Stay Patient',
-            desc: 'Trust restraint all the way through.',
-            next: 'E3_TOO_LITTLE'
-          },
-          {
-            label: 'Add Pressure Now',
-            desc: 'Switch before this gets even worse.',
-            next: 'WORLD_HOLDS_BREATH',
-            effects: { WORLD_TENSION: 1, US_CREDIBILITY: 1 }
-          }
+          { label: 'Stay Patient', desc: 'Trust restraint all the way through.', next: 'E3_TOO_LITTLE' },
+          { label: 'Add Pressure Now', desc: 'Switch before this gets even worse.', next: 'WORLD_HOLDS_BREATH',
+            effects: { WORLD_TENSION: 1, US_CREDIBILITY: 1 } }
         ]
       },
 
       THREATEN_STRIKE: {
+        eyebrow: 'COERCIVE DIPLOMACY',
         title: 'Talk With a Loaded Gun',
-        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/seqset1slides/refs/heads/main/node15.png',
-        imageCaption: 'Node 15 art',
-        text: `Now I’m still talking, but everybody in the room can see the threat behind the words.
+        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/seqset1slides/main/node15.png',
+        imageCaption: 'Strategic Posturing',
+        text: `Now I'm still talking, but everybody in the room can see <strong>the threat behind the words</strong>.
 
-Maybe that still counts as diplomacy.
+<em>Maybe that still counts as diplomacy.</em>
 
-Maybe it is just delayed violence with nicer language.
+<em>Maybe it is just delayed violence with nicer language.</em>
 
-Either way, the temperature just went up.`,
+Either way, the temperature just <span class="danger">went up</span>.`,
         choices: [
-          {
-            label: 'One Last Chance',
-            desc: 'Keep the threat there, but still leave a door open.',
-            next: 'WORLD_HOLDS_BREATH',
-            effects: { DIPLOMATIC_SPACE: 1 }
-          },
-          {
-            label: 'Prep the Strike for Real',
-            desc: 'Make sure the threat is not just talk.',
-            next: 'WORLD_HOLDS_BREATH',
-            effects: { WORLD_TENSION: 2, MILITARY_PRESSURE: 1 }
-          }
+          { label: 'One Last Chance', desc: 'Keep the threat there, but still leave a door open.', next: 'WORLD_HOLDS_BREATH',
+            effects: { DIPLOMATIC_SPACE: 1 } },
+          { label: 'Prep the Strike for Real', desc: 'Make sure the threat is not just talk.', next: 'WORLD_HOLDS_BREATH',
+            effects: { WORLD_TENSION: 2, MILITARY_PRESSURE: 1 } }
         ]
       },
 
       WORLD_HOLDS_BREATH: {
+        eyebrow: 'GLOBAL ALERT // DEFCON 2',
         title: 'The World Holds Its Breath',
-        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/seqset1slides/refs/heads/main/node16.jpg',
-        imageCaption: 'Node 16 art',
-        text: `Now everybody is in it.
+        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/seqset1slides/main/node16.jpg',
+        imageCaption: 'International Crisis Watch',
+        text: `Now <strong>everybody is in it</strong>.
 
 American families are scared. The military is preparing. Allies are watching. The Soviets are calculating.
 
-Nobody knows whether the next thing will be a message, a mistake, or a missile.
+<em>Nobody knows whether the next thing will be a message, a mistake, or a missile.</em>
 
 And the worst part is this:
 
-Both sides think they are reacting to danger.
+<span class="hl">Both sides think they are reacting to danger.</span>
 
-Both sides think the other side is pushing too far.
+<span class="hl">Both sides think the other side is pushing too far.</span>
 
-Both sides have enough weapons to destroy the planet.`,
-        support: {
-          title: 'That is the Cold War trap',
-          text: 'The U.S. saw missiles in Cuba as a direct threat. The Soviets saw American power near their borders as a threat too. Fear ran both ways.'
-        },
+<span class="danger">Both sides have enough weapons to destroy the planet.</span>`,
+        support: { title: 'THE COLD WAR TRAP', text: 'The U.S. saw missiles in Cuba as a direct threat. The Soviets saw American power near their borders as a threat too. Fear ran both ways.' },
         advisors: [
-          { role: 'General', text: '“Get ready to hit.”' },
-          { role: 'Diplomat', text: '“Wait for a message. One off-ramp may still be there.”' }
+          { role: 'GENERAL', text: '"Get ready to hit."' },
+          { role: 'DIPLOMAT', text: '"Wait for a message. One off-ramp may still be there."' }
         ],
         choices: [
-          {
-            label: 'Raise Military Readiness',
-            desc: 'Make sure the Soviets know this can turn into war fast.',
-            next: 'LETTERS',
-            effects: { WORLD_TENSION: 2, MILITARY_PRESSURE: 1 }
-          },
-          {
-            label: 'Go Public at the U.N.',
-            desc: 'Use the world stage to buy time and pressure.',
-            next: 'LETTERS',
-            effects: { DIPLOMATIC_SPACE: 1, US_CREDIBILITY: -1 },
-            flags: { consulted_un: true }
-          },
-          {
-            label: 'Wait, But Stay Ready',
-            desc: 'Hold pressure without lunging first.',
-            next: 'LETTERS',
-            effects: { US_CREDIBILITY: 1, DIPLOMATIC_SPACE: 1 }
-          },
-          {
-            label: 'Signal You Can Compromise',
-            desc: 'Quietly hint that survival matters more than looking perfect.',
-            next: 'LETTERS',
-            effects: { DIPLOMATIC_SPACE: 2 }
-          }
+          { label: 'Raise Military Readiness', desc: 'Make sure the Soviets know this can turn into war fast.', next: 'LETTERS',
+            effects: { WORLD_TENSION: 2, MILITARY_PRESSURE: 1 } },
+          { label: 'Go Public at the U.N.', desc: 'Use the world stage to buy time and pressure.', next: 'LETTERS',
+            effects: { DIPLOMATIC_SPACE: 1, US_CREDIBILITY: -1 }, flags: { consulted_un: true } },
+          { label: 'Wait, But Stay Ready', desc: 'Hold pressure without lunging first.', next: 'LETTERS',
+            effects: { US_CREDIBILITY: 1, DIPLOMATIC_SPACE: 1 } },
+          { label: 'Signal You Can Compromise', desc: 'Quietly hint that survival matters more than looking perfect.', next: 'LETTERS',
+            effects: { DIPLOMATIC_SPACE: 2 } }
         ]
       },
 
       LETTERS: {
+        eyebrow: 'TWO MESSAGES FROM MOSCOW',
         title: 'Two Letters. Two Different Games.',
-        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/seqset1slides/refs/heads/main/node17.png',
-        imageCaption: 'Node 17 art',
-        text: `Now Khrushchev sends me two messages, and they are absolutely not the same.
+        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/seqset1slides/main/node17.png',
+        imageCaption: 'Khrushchev Communications — Decoded',
+        text: `Now <span class="hl">Khrushchev</span> sends me two messages, and they are <strong>absolutely not the same</strong>.
 
-The first one sounds almost human. He says the Soviets might pull the missiles out of Cuba if the U.S. promises not to invade Cuba.
+The first one sounds <em>almost human</em>. He says the Soviets might pull the missiles out of Cuba <span class="cool">if the U.S. promises not to invade Cuba</span>.
 
 Then the second message lands.
 
-This one is colder. Harder. More demanding.
+<em>This one is colder. Harder. More demanding.</em>
 
-Now he wants our missiles out of Turkey too.
+Now he wants our missiles out of <span class="hl">Turkey</span> too.
 
-And that makes this crisis messier than people want to admit.
+And that makes this crisis <strong>messier than people want to admit</strong>.
 
-Because from the Soviet point of view, America already has missiles sitting close to them as well.`,
-        support: {
-          title: 'Why Turkey matters',
-          text: 'The U.S. had missiles in Turkey near the Soviet Union. That did not make Soviet missiles in Cuba harmless, but it did make the crisis less morally simple.'
-        },
+Because from the Soviet point of view, <em>America already has missiles sitting close to them as well</em>.`,
+        support: { title: 'WHY TURKEY MATTERS', text: 'The U.S. had missiles in Turkey near the Soviet Union. That did not make Soviet missiles in Cuba harmless, but it did make the crisis less morally simple.' },
         advisors: [
-          { role: 'Hawks', text: '“Reject both. Show strength.”' },
-          { role: 'Realists', text: '“Take the first letter publicly. Handle the rest quietly.”' }
+          { role: 'HAWKS', text: '"Reject both. Show strength."' },
+          { role: 'REALISTS', text: '"Take the first letter publicly. Handle the rest quietly."' }
         ],
         choices: [
-          {
-            label: 'Answer the First Letter Only',
-            desc: 'Promise not to invade Cuba if the missiles leave.',
-            next: 'INCIDENT',
-            effects: { DIPLOMATIC_SPACE: 1, US_CREDIBILITY: 1 },
-            flags: { promised_no_invasion_of_cuba: true }
-          },
-          {
-            label: 'Accept Both Publicly',
-            desc: 'Trade Cuba for Turkey out in the open.',
-            next: 'E4_POLITICAL_COST',
-            effects: { WORLD_TENSION: -2, US_CREDIBILITY: -2, DIPLOMATIC_SPACE: 2 }
-          },
-          {
-            label: 'Reject Both',
-            desc: 'Move closer to war and dare them to blink first.',
-            next: 'INCIDENT',
-            effects: { WORLD_TENSION: 3, DIPLOMATIC_SPACE: -3, MILITARY_PRESSURE: 2 },
-            flags: { rejected_both_letters: true }
-          },
-          {
-            label: 'Go Public on One, Deal Quietly on Turkey',
-            desc: 'Look strong in public. Compromise in private.',
-            next: 'INCIDENT',
-            effects: { WORLD_TENSION: -1, DIPLOMATIC_SPACE: 3 },
-            flags: { secret_turkey_deal: true, promised_no_invasion_of_cuba: true }
-          }
+          { label: 'Answer the First Letter Only', desc: 'Promise not to invade Cuba if the missiles leave.', next: 'INCIDENT',
+            effects: { DIPLOMATIC_SPACE: 1, US_CREDIBILITY: 1 }, flags: { promised_no_invasion_of_cuba: true } },
+          { label: 'Accept Both Publicly', desc: 'Trade Cuba for Turkey out in the open.', next: 'E4_POLITICAL_COST',
+            effects: { WORLD_TENSION: -2, US_CREDIBILITY: -2, DIPLOMATIC_SPACE: 2 } },
+          { label: 'Reject Both', desc: 'Move closer to war and dare them to blink first.', next: 'INCIDENT',
+            effects: { WORLD_TENSION: 3, DIPLOMATIC_SPACE: -3, MILITARY_PRESSURE: 2 }, flags: { rejected_both_letters: true } },
+          { label: 'Public on One, Quiet on Turkey', desc: 'Look strong in public. Compromise in private.', next: 'INCIDENT',
+            effects: { WORLD_TENSION: -1, DIPLOMATIC_SPACE: 3 }, flags: { secret_turkey_deal: true, promised_no_invasion_of_cuba: true } }
         ]
       },
 
       INCIDENT: {
+        eyebrow: 'BLACK SATURDAY // OCT 27',
         title: 'One Bad Move Away',
-        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/seqset1slides/refs/heads/main/node18.png',
-        imageCaption: 'Node 18 art',
-        text: `Just when it feels like we might still pull this back, something goes wrong.
+        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/seqset1slides/main/node18.png',
+        imageCaption: 'U-2 Pilot Maj. Rudolf Anderson — Lost in Cuba',
+        text: `Just when it feels like we might still pull this back, <strong>something goes wrong</strong>.
 
-A U.S. aircraft is shot down.
+<span class="danger">A U.S. aircraft is shot down.</span>
 
-Now the whole room splits.
+Now the whole room <em>splits</em>.
 
 Some men say this proves the Soviets are testing me.
 
-Others say it could be a local commander, bad timing, panic, or plain human error.
+Others say it could be <span class="hl">a local commander, bad timing, panic, or plain human error</span>.
 
-And that is the horror of this whole thing.
+<strong>And that is the horror of this whole thing.</strong>
 
-Sometimes the world does not end because leaders planned it.
+<em>Sometimes the world does not end because leaders planned it.</em>
 
-Sometimes it ends because somebody, somewhere, made one terrible call.`,
-        alert: {
-          title: 'This is the nightmare',
-          text: 'In a nuclear crisis, accidents and misunderstandings can be just as deadly as deliberate attacks.'
-        },
+<em>Sometimes it ends because somebody, somewhere, made one terrible call.</em>`,
+        alert: { title: 'THE NIGHTMARE', text: 'In a nuclear crisis, accidents and misunderstandings can be just as deadly as deliberate attacks.' },
         choices: [
-          {
-            label: 'Retaliate Right Now',
-            desc: 'Show that attacking American forces has a price.',
-            next: (state) => {
-              state.flags.retaliated_after_incident = true;
-              return state.stats.WORLD_TENSION >= 8 ? 'E1_NUCLEAR_FIRE' : 'E2_MISCALCULATION';
-            },
-            effects: { WORLD_TENSION: 4 }
-          },
-          {
-            label: 'Hold Fire',
-            desc: 'Refuse to let one incident become the end of the world.',
-            next: (state) => {
-              if (state.flags.secret_turkey_deal && state.flags.promised_no_invasion_of_cuba) return 'E6_HISTORICAL';
-              return 'E5_DIRTY_PEACE';
-            },
-            effects: { DIPLOMATIC_SPACE: 2, US_CREDIBILITY: -1 }
-          },
-          {
-            label: 'Raise the Alert, Not the Bombs',
-            desc: 'Signal strength without firing next.',
-            next: 'E5_DIRTY_PEACE',
-            effects: { WORLD_TENSION: 1, US_CREDIBILITY: 1, DIPLOMATIC_SPACE: 1 }
-          },
-          {
-            label: 'One More Hit Means War',
-            desc: 'Draw a final line and hope nobody crosses it.',
-            next: 'E5_DIRTY_PEACE',
-            effects: { WORLD_TENSION: 2, US_CREDIBILITY: 2 }
-          }
+          { label: 'Retaliate Right Now', desc: 'Show that attacking American forces has a price.',
+            next: (state) => { state.flags.retaliated_after_incident = true; return state.stats.WORLD_TENSION >= 8 ? 'E1_NUCLEAR_FIRE' : 'E2_MISCALCULATION'; },
+            effects: { WORLD_TENSION: 4 } },
+          { label: 'Hold Fire', desc: 'Refuse to let one incident become the end of the world.',
+            next: (state) => { if (state.flags.secret_turkey_deal && state.flags.promised_no_invasion_of_cuba) return 'E6_HISTORICAL'; return 'E5_DIRTY_PEACE'; },
+            effects: { DIPLOMATIC_SPACE: 2, US_CREDIBILITY: -1 } },
+          { label: 'Raise Alert, Not Bombs', desc: 'Signal strength without firing next.', next: 'E5_DIRTY_PEACE',
+            effects: { WORLD_TENSION: 1, US_CREDIBILITY: 1, DIPLOMATIC_SPACE: 1 } },
+          { label: 'One More Hit Means War', desc: 'Draw a final line and hope nobody crosses it.', next: 'E5_DIRTY_PEACE',
+            effects: { WORLD_TENSION: 2, US_CREDIBILITY: 2 } }
         ]
       }
     };
@@ -1579,15 +2341,15 @@ Sometimes it ends because somebody, somewhere, made one terrible call.`,
     const endings = {
       E1_NUCLEAR_FIRE: {
         title: 'Nuclear Fire',
-        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/seqset1slides/refs/heads/main/node19.png',
-        imageCaption: 'Ending art',
+        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/seqset1slides/main/node19.png',
+        imageCaption: 'Final Transmission',
         tone: 'bad',
-        result: 'Game Over: You chose escalation over control.',
-        text: `I thought force would solve the crisis.
+        result: 'GAME OVER // ESCALATION OVER CONTROL',
+        text: `<em>I thought force would solve the crisis.</em>
 
-Instead, force erased the line between crisis and war.
+<strong>Instead, force erased the line between crisis and war.</strong>
 
-Attacks triggered retaliation. Retaliation triggered more retaliation. The Cold War finally snapped into the worst thing it could become.
+Attacks triggered retaliation. Retaliation triggered more retaliation. The Cold War finally <span class="danger">snapped into the worst thing it could become</span>.
 
 This stopped being about Cuba.
 
@@ -1595,108 +2357,108 @@ It stopped being about image.
 
 It stopped being about winning.
 
-Cities burned. Millions died. The world I was trying to protect collapsed in nuclear fire.`,
+<span class="danger">Cities burned. Millions die.</span> The world I was trying to protect <span class="hl">collapsed in nuclear fire</span>.`,
         reflection: 'Did this ending come from one choice, or from a whole pattern of choosing harder and harder escalation?'
       },
       E2_MISCALCULATION: {
         title: 'Miscalculation Apocalypse',
-        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/seqset1slides/refs/heads/main/node20.png',
-        imageCaption: 'Ending art',
+        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/seqset1slides/main/node20.png',
+        imageCaption: 'Final Record',
         tone: 'bad',
-        result: 'Game Over: The world ended by mistake.',
-        text: `Nobody sat down and said, “Let’s end civilization today.”
+        result: 'GAME OVER // THE WORLD ENDED BY MISTAKE',
+        text: `<em>Nobody sat down and said, "Let's end civilization today."</em>
 
-That is what makes this worse.
+<strong>That is what makes this worse.</strong>
 
-One confrontation became two. A warning became a shot. A local decision turned into a global disaster.
+One confrontation became two. A warning became a shot. <span class="danger">A local decision turned into a global disaster.</span>
 
 The world did not end because of one giant master plan.
 
-It ended because fear, pressure, and bad timing met weapons too powerful for human error.`,
+<em>It ended because <span class="hl">fear, pressure, and bad timing</span> met weapons too powerful for human error.</em>`,
         reflection: 'Why can accidents and misunderstandings be just as dangerous as deliberate aggression in a nuclear crisis?'
       },
       E3_TOO_LITTLE: {
         title: 'Too Little, Too Late',
-        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/us-constitution-workbook/refs/heads/main/node21.png',
-        imageCaption: 'Ending art',
+        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/us-constitution-workbook/main/node21.png',
+        imageCaption: 'Crisis Slips Out of Control',
         tone: 'mixed',
-        result: 'Ending Unlocked: You avoided immediate war, but lost control of the crisis.',
-        text: `I stayed restrained.
+        result: 'ENDING UNLOCKED // LOST CONTROL',
+        text: `I stayed <span class="cool">restrained</span>.
 
-That felt moral.
+<em>That felt moral.</em>
 
-It also gave the Soviets more time.
+<strong>It also gave the Soviets more time.</strong>
 
-The missile threat got stronger. America looked unsure. The crisis did not explode right away, but it did slip further out of my hands.
+The missile threat got stronger. America looked unsure. The crisis did not explode right away, but it did <span class="hl">slip further out of my hands</span>.
 
-Peace without leverage is not always peace.
+<em>Peace without leverage is not always peace.</em>
 
-Sometimes it is just delay.`,
+<em>Sometimes it is just delay.</em>`,
         reflection: 'Can a choice feel morally better in the moment but still make the bigger crisis worse?'
       },
       E4_POLITICAL_COST: {
         title: 'Peace With Political Cost',
-        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/seqset1slides/refs/heads/main/node22.png',
-        imageCaption: 'Ending art',
+        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/seqset1slides/main/node22.png',
+        imageCaption: 'Treaty Signed',
         tone: 'mixed',
-        result: 'Ending Unlocked: You saved lives, but paid for it politically.',
-        text: `The missiles were removed. War was avoided. People lived.
+        result: 'ENDING UNLOCKED // LIVES SAVED, IMAGE SHAKEN',
+        text: `<span class="cool">The missiles were removed.</span> War was avoided. <strong>People lived.</strong>
 
 But the public trade came with a cost.
 
-A lot of Americans would see it as the U.S. getting pushed around in public. Allies would wonder how solid American power really looked.
+A lot of Americans would see it as the U.S. <span class="danger">getting pushed around in public</span>. Allies would wonder how solid American power really looked.
 
-I kept people alive.
+<em>I kept people alive.</em>
 
-I just did it in a way that made strength look negotiable.`,
+<em>I just did it in a way that made strength look <span class="hl">negotiable</span>.</em>`,
         reflection: 'Should leaders care more about appearances, or more about keeping people alive?'
       },
       E5_DIRTY_PEACE: {
         title: 'Dirty Peace',
-        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/seqset1slides/refs/heads/main/node23.png',
-        imageCaption: 'Ending art',
+        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/seqset1slides/main/node23.png',
+        imageCaption: 'Crisis De-escalation',
         tone: 'goodish',
-        result: 'Ending Unlocked: You got a survivable ending, not a clean one.',
-        text: `I did not get a pure victory.
+        result: 'ENDING UNLOCKED // SURVIVABLE, NOT CLEAN',
+        text: `<em>I did not get a pure victory.</em>
 
-I got the least terrible outcome.
+<strong>I got the least terrible outcome.</strong>
 
-I used pressure to make diplomacy matter, and I used diplomacy to stop pressure from turning into apocalypse.
+I used pressure to make <span class="cool">diplomacy</span> matter, and I used <span class="cool">diplomacy</span> to stop pressure from <span class="danger">turning into apocalypse</span>.
 
-Was it fully honest? No.
+Was it fully honest? <em>No.</em>
 
-Was it fully noble? Also no.
+Was it fully noble? <em>No.</em>
 
-Did it help keep millions of people alive?
+Did it help <span class="hl">keep millions of people alive</span>?
 
-Yes.
+<strong>Yes.</strong>
 
-Sometimes history does not reward purity.
+<em>Sometimes history does not reward purity.</em>
 
-Sometimes it rewards whoever keeps the world from burning.`,
+<em>Sometimes it rewards whoever keeps the world from burning.</em>`,
         reflection: 'Does an imperfect peace still count as strong leadership? Why or why not?'
       },
       E6_HISTORICAL: {
         title: 'The Closest Thing to a Good Ending',
-        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/seqset1slides/refs/heads/main/node24.png',
-        imageCaption: 'Ending art',
+        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/seqset1slides/main/node24.png',
+        imageCaption: 'Resolution — October 28, 1962',
         tone: 'goodish',
-        result: 'Ending Unlocked: You found the closest thing this crisis had to a win.',
-        text: `The Soviet missiles leave Cuba.
+        result: 'ENDING UNLOCKED // HISTORICAL OUTCOME',
+        text: `<span class="cool">The Soviet missiles leave Cuba.</span>
 
 The U.S. publicly promises not to invade Cuba.
 
-Privately, American missiles in Turkey will later be removed.
+Privately, American missiles in <span class="hl">Turkey</span> will later be removed.
 
-Nobody gets everything.
+<em>Nobody gets everything.</em>
 
-Nobody gets to act innocent.
+<em>Nobody gets to act innocent.</em>
 
-Nobody gets to pretend this was simple.
+<em>Nobody gets to pretend this was simple.</em>
 
-But the world survives.
+<strong>But the world survives.</strong>
 
-And in a moment like this, survival counts for a lot.`,
+And in a moment like this, <span class="hl">survival counts for a lot</span>.`,
         reflection: 'Why does the best real-world ending here still feel messy instead of heroic?'
       }
     };
