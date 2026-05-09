@@ -1303,7 +1303,7 @@
     </div>
     <div class="intro-title">13 DAYS</div>
     <div class="intro-stamp">TOP SECRET</div>
-    <button class="intro-skip" onclick="document.getElementById('intro').classList.add('skip')">SKIP ▸</button>
+    <button class="intro-skip" onclick="skipIntro()">SKIP ▸</button>
   </div>
 
   <div class="grain"></div>
@@ -1401,15 +1401,37 @@
   </div>
 
   <script>
-    // ===== AUDIO SYSTEM (Web Audio API — no external files) =====
+    // ===== AUDIO SYSTEM (Web Audio API effects + hosted MP3 music) =====
+    const GAMEPLAY_MUSIC_URL = 'https://raw.githubusercontent.com/dwallace87-lgtm/13dayscubanmissilecrisis/refs/heads/main/gameplay%20music.mp3';
+    const NUCLEAR_MUSIC_URL = 'https://raw.githubusercontent.com/dwallace87-lgtm/13dayscubanmissilecrisis/refs/heads/main/nuclear%20war%20music.mp3';
+    const NUCLEAR_ENDING_IDS = new Set(['E1_NUCLEAR_FIRE', 'E2_MISCALCULATION']);
+
     let audioCtx = null;
     let soundEnabled = true;
+    let musicUnlocked = false;
+    let activeMusicTrack = 'gameplay';
+
+    const gameplayMusic = new Audio(GAMEPLAY_MUSIC_URL);
+    gameplayMusic.loop = true;
+    gameplayMusic.preload = 'auto';
+    gameplayMusic.volume = 0.4;
+
+    const nuclearEndingMusic = new Audio(NUCLEAR_MUSIC_URL);
+    nuclearEndingMusic.loop = true;
+    nuclearEndingMusic.preload = 'auto';
+    nuclearEndingMusic.volume = 0.5;
 
     function initAudio() {
       if (!audioCtx) {
         try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
-        catch(e) { soundEnabled = false; }
+        catch(e) { audioCtx = null; }
       }
+
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume().catch(() => {});
+      }
+
+      syncAudioToggleUI();
     }
 
     function playClack() {
@@ -1449,13 +1471,94 @@
       osc.start(); osc.stop(audioCtx.currentTime + 0.2);
     }
 
+    function pauseAndReset(track) {
+      if (!track) return;
+      track.pause();
+      try { track.currentTime = 0; } catch(e) {}
+    }
+
+    function safelyPlay(track) {
+      if (!soundEnabled || !musicUnlocked || !track) return;
+      if (!track.paused) return;
+      const playAttempt = track.play();
+      if (playAttempt && typeof playAttempt.catch === 'function') {
+        // Autoplay policy can still reject in some browsers; the desired track
+        // stays recorded and will retry on the next allowed interaction.
+        playAttempt.catch(() => {});
+      }
+    }
+
+    // Unlock MP3 playback only after a real user gesture, then resume whichever
+    // music bed matches the current scene/ending.
+    function unlockMusic() {
+      musicUnlocked = true;
+      initAudio();
+      if (!soundEnabled) return;
+      if (activeMusicTrack === 'nuclear') playNuclearEndingMusic();
+      else if (activeMusicTrack === 'gameplay') playGameplayMusic();
+    }
+
+    function playGameplayMusic() {
+      activeMusicTrack = 'gameplay';
+      pauseAndReset(nuclearEndingMusic);
+      if (!soundEnabled) return;
+      gameplayMusic.volume = 0.4;
+      safelyPlay(gameplayMusic);
+    }
+
+    function playNuclearEndingMusic() {
+      activeMusicTrack = 'nuclear';
+      pauseAndReset(gameplayMusic);
+      if (!soundEnabled) return;
+      nuclearEndingMusic.volume = 0.5;
+      safelyPlay(nuclearEndingMusic);
+    }
+
+    function pauseAllMusic() {
+      gameplayMusic.pause();
+      nuclearEndingMusic.pause();
+    }
+
+    function stopAllMusic() {
+      pauseAndReset(gameplayMusic);
+      pauseAndReset(nuclearEndingMusic);
+    }
+
+    function syncAudioToggleUI() {
+      const toggle = document.getElementById('sound-toggle');
+      if (!toggle) return;
+      toggle.textContent = soundEnabled ? '🔊' : '🔇';
+      toggle.setAttribute('aria-label', soundEnabled ? 'Mute sound' : 'Unmute sound');
+      toggle.setAttribute('aria-pressed', String(!soundEnabled));
+    }
+
+    function skipIntro() {
+      unlockMusic();
+      document.getElementById('intro').classList.add('skip');
+    }
+
     document.getElementById('sound-toggle').addEventListener('click', () => {
       soundEnabled = !soundEnabled;
-      document.getElementById('sound-toggle').textContent = soundEnabled ? '🔊' : '🔇';
-      if (soundEnabled) initAudio();
+      syncAudioToggleUI();
+      if (soundEnabled) {
+        unlockMusic();
+      } else {
+        pauseAllMusic();
+      }
     });
 
-    document.body.addEventListener('click', initAudio, { once: true });
+    function handleFirstAudioGesture() {
+      ['click', 'keydown', 'touchstart', 'pointerdown'].forEach((eventName) => {
+        document.removeEventListener(eventName, handleFirstAudioGesture, { capture: true });
+      });
+      unlockMusic();
+    }
+
+    ['click', 'keydown', 'touchstart', 'pointerdown'].forEach((eventName) => {
+      document.addEventListener(eventName, handleFirstAudioGesture, { once: true, capture: true });
+    });
+
+    syncAudioToggleUI();
 
     // ===== GAME STATE =====
     const game = {
@@ -1665,6 +1768,7 @@
     }
 
     function renderScene(id) {
+      playGameplayMusic();
       const scene = scenes[id];
       const container = document.getElementById('scene-container');
       if (!scene) {
@@ -1756,6 +1860,9 @@
     }
 
     function renderEnding(id) {
+      if (NUCLEAR_ENDING_IDS.has(id)) playNuclearEndingMusic();
+      else playGameplayMusic();
+
       const ending = endings[id];
       const container = document.getElementById('scene-container');
       const isGood = ending.tone === 'goodish' || ending.tone === 'mixed';
@@ -1839,6 +1946,8 @@
       game.docCount = 1;
       game.day = 1;
       document.getElementById('flash-log').innerHTML = '';
+      activeMusicTrack = 'gameplay';
+      playGameplayMusic();
       updateSidebar();
       renderScene('OPENING');
     }
