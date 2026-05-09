@@ -1459,6 +1459,183 @@
       .ticker-content { font-size: 10px; }
       .scene-body strong, .scene-body .punch { font-size: 1.15em; }
     }
+
+    @media (max-width: 768px) {
+      .app {
+        display: block;
+        min-height: 100vh;
+      }
+
+      .sidebar {
+        display: none;
+      }
+
+      .main {
+        max-width: none;
+        width: 100%;
+        padding: 18px 12px 76px;
+      }
+
+      .top-banner {
+        position: sticky;
+        top: 0;
+        gap: 6px;
+        padding: 7px 8px;
+        font-size: 9px;
+        letter-spacing: 0.16em;
+        line-height: 1.2;
+      }
+
+      .top-banner-center {
+        text-align: center;
+      }
+
+      .scene-meta-bar {
+        margin: 2px 0 10px;
+        padding: 9px 10px;
+        border: 1px solid rgba(138,116,73,0.55);
+        border-left: 3px solid var(--warn);
+        background: rgba(31,24,18,0.72);
+        box-shadow: var(--shadow);
+        font-size: 9px;
+        letter-spacing: 0.08em;
+      }
+
+      .scene-meta-bar .left {
+        gap: 7px;
+        flex-wrap: wrap;
+      }
+
+      .live-indicator {
+        flex-shrink: 0;
+      }
+
+      .flash-log {
+        min-height: 0;
+        margin-bottom: 10px;
+        gap: 6px;
+      }
+
+      .flash-pill {
+        width: 100%;
+        justify-content: center;
+        padding: 6px 8px;
+        font-size: 9px;
+        letter-spacing: 0.08em;
+      }
+
+      .scene {
+        padding: 22px 16px;
+        margin-bottom: 16px;
+        border-left: 1px solid var(--border);
+        border-right: 1px solid var(--border);
+      }
+
+      h2.scene-title {
+        font-size: 34px;
+        line-height: 0.98;
+      }
+
+      .scene-subtitle {
+        font-size: 12px;
+        line-height: 1.35;
+        margin-bottom: 14px;
+      }
+
+      .scene-visual-wrap {
+        margin: 14px 0 18px;
+      }
+
+      .scene-visual {
+        aspect-ratio: 4 / 3;
+      }
+
+      .scene-visual-caption {
+        font-size: 9px;
+        letter-spacing: 0.12em;
+      }
+
+      .scene-body {
+        font-size: 16px;
+        line-height: 1.62;
+      }
+
+      .cfu-brief,
+      .support-box,
+      .alert-box,
+      .reflection {
+        padding: 14px;
+      }
+
+      .cfu-question {
+        font-size: 24px;
+      }
+
+      .advisor-row {
+        grid-template-columns: 1fr;
+      }
+
+      .choices-header {
+        align-items: flex-start;
+        flex-wrap: wrap;
+        padding: 8px 10px;
+        font-size: 15px;
+        letter-spacing: 0.16em;
+      }
+
+      .choices-header.locked::after {
+        width: 100%;
+        margin-left: 22px;
+        font-size: 9px;
+      }
+
+      .choice {
+        padding: 16px 14px;
+      }
+
+      .choice:hover, .choice:focus-visible,
+      .cfu-option:hover, .cfu-option:focus-visible {
+        transform: none;
+      }
+
+      .choice-label {
+        align-items: flex-start;
+        padding-right: 34px;
+        font-size: 21px;
+      }
+
+      .choice-desc {
+        padding-left: 0;
+        font-size: 13.5px;
+      }
+
+      .choice-risk {
+        top: 14px;
+        right: 12px;
+      }
+
+      .sound-toggle {
+        right: 12px;
+        bottom: 44px;
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+      }
+
+      .ticker {
+        height: 30px;
+      }
+
+      .ticker-label {
+        padding: 4px 8px;
+        font-size: 10px;
+        letter-spacing: 0.1em;
+      }
+
+      .ticker-content {
+        font-size: 9px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -1889,29 +2066,34 @@
     function updateSidebar() {
       Object.keys(game.stats).forEach((key) => {
         const val = game.stats[key];
-        document.getElementById(`stat-${key}`).textContent = `${val}/10`;
-        document.getElementById(`meter-${key}`).style.width = `${val * 10}%`;
+        const statEl = document.getElementById(`stat-${key}`);
+        const meterEl = document.getElementById(`meter-${key}`);
+        if (statEl) statEl.textContent = `${val}/10`;
+        if (meterEl) meterEl.style.width = `${val * 10}%`;
       });
       updateDefcon();
 
       const historyList = document.getElementById('history-list');
-      historyList.innerHTML = '';
-      if (!game.history.length) {
-        const div = document.createElement('div');
-        div.className = 'history-empty';
-        div.textContent = 'No calls made yet.';
-        historyList.appendChild(div);
-      } else {
-        game.history.slice().reverse().forEach((item, idx) => {
+      if (historyList) {
+        historyList.innerHTML = '';
+        if (!game.history.length) {
           const div = document.createElement('div');
-          div.className = 'history-item';
-          const num = String(game.history.length - idx).padStart(2, '0');
-          div.innerHTML = `<strong style="color:var(--warn)">[${num}]</strong> ${item}`;
+          div.className = 'history-empty';
+          div.textContent = 'No calls made yet.';
           historyList.appendChild(div);
-        });
+        } else {
+          game.history.slice().reverse().forEach((item, idx) => {
+            const div = document.createElement('div');
+            div.className = 'history-item';
+            const num = String(game.history.length - idx).padStart(2, '0');
+            div.innerHTML = `<strong style="color:var(--warn)">[${num}]</strong> ${item}`;
+            historyList.appendChild(div);
+          });
+        }
       }
 
-      document.getElementById('doc-counter').textContent = String(game.docCount).padStart(3, '0');
+      const docCounter = document.getElementById('doc-counter');
+      if (docCounter) docCounter.textContent = String(game.docCount).padStart(3, '0');
     }
 
     function flashChanges(effects = {}) {
