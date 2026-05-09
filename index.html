@@ -935,6 +935,115 @@
       50% { transform: scale(1.2); }
     }
 
+
+
+    /* Mission-check CFUs */
+    .cfu-brief {
+      margin: 20px 0;
+      padding: 18px 20px;
+      border: 1px solid rgba(245,185,66,0.5);
+      border-left: 4px solid var(--warn);
+      border-radius: 3px;
+      background: linear-gradient(180deg, rgba(245,185,66,0.12), rgba(31,24,18,0.7));
+      box-shadow: var(--shadow);
+      position: relative;
+      z-index: 1;
+      animation: boxSlide 0.5s ease 0.55s both;
+    }
+
+    .cfu-kicker {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      color: var(--warn);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .cfu-kicker::before {
+      content: "◆";
+      color: var(--accent);
+      font-size: 9px;
+    }
+
+    .cfu-question {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 28px;
+      line-height: 1;
+      letter-spacing: 0.04em;
+      color: var(--paper);
+      margin-bottom: 12px;
+    }
+
+    .cfu-options {
+      display: grid;
+      gap: 8px;
+    }
+
+    .cfu-option {
+      width: 100%;
+      text-align: left;
+      border: 1px solid rgba(109,212,191,0.35);
+      border-radius: 3px;
+      background: rgba(0,0,0,0.18);
+      color: var(--text);
+      padding: 11px 13px;
+      cursor: pointer;
+      font-family: 'Special Elite', monospace;
+      font-size: 14px;
+      line-height: 1.45;
+      transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .cfu-option:hover, .cfu-option:focus-visible {
+      transform: translateX(4px);
+      border-color: var(--accent);
+      background: rgba(109,212,191,0.1);
+      outline: none;
+    }
+
+    .cfu-option.selected {
+      border-color: var(--warn);
+      background: rgba(245,185,66,0.14);
+    }
+
+    .cfu-feedback {
+      display: none;
+      margin-top: 12px;
+      padding: 11px 13px;
+      border-left: 3px solid var(--accent);
+      background: rgba(109,212,191,0.08);
+      color: #daf4ec;
+      font-family: 'Special Elite', monospace;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .cfu-feedback.show { display: block; }
+
+    .cfu-continue {
+      display: none;
+      margin-top: 12px;
+    }
+
+    .cfu-continue.show { display: inline-flex; }
+
+    .choices.locked {
+      display: none;
+    }
+
+    .choices-header.locked::after {
+      content: "MISSION CHECK REQUIRED";
+      margin-left: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+    }
+
     .advisor-row {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -1767,6 +1876,56 @@
       return html;
     }
 
+    function buildCFUHTML(cfu) {
+      if (!cfu) return '';
+      return `
+        <section class="cfu-brief" id="cfu-brief" aria-labelledby="cfu-question">
+          <div class="cfu-kicker">MISSION CHECK // QUICK READ</div>
+          <div class="cfu-question" id="cfu-question">${cfu.question}</div>
+          <div class="cfu-options">
+            ${cfu.options.map((option, index) => `
+              <button class="cfu-option" type="button" data-feedback="${index}">${option}</button>
+            `).join('')}
+          </div>
+          <div class="cfu-feedback" id="cfu-feedback" aria-live="polite"></div>
+          <button class="btn cfu-continue" id="cfu-continue" type="button">Continue Briefing</button>
+        </section>`;
+    }
+
+    function armCFU(cfu) {
+      if (!cfu) return;
+      const feedback = document.getElementById('cfu-feedback');
+      const continueBtn = document.getElementById('cfu-continue');
+      const choicesHeader = document.getElementById('choices-header');
+      const choicesWrap = document.getElementById('choices');
+      const options = Array.from(document.querySelectorAll('.cfu-option'));
+      if (!feedback || !continueBtn || !choicesHeader || !choicesWrap || !options.length) return;
+
+      choicesHeader.classList.add('locked');
+      choicesWrap.classList.add('locked');
+
+      options.forEach((optionBtn) => {
+        optionBtn.addEventListener('click', () => {
+          options.forEach(btn => {
+            btn.classList.remove('selected');
+            btn.disabled = true;
+          });
+          optionBtn.classList.add('selected');
+          feedback.innerHTML = `<strong>Briefing Note:</strong> ${cfu.feedback}`;
+          feedback.classList.add('show');
+          continueBtn.classList.add('show');
+          playBeep(620, 0.12, 0.05);
+        });
+      });
+
+      continueBtn.addEventListener('click', () => {
+        choicesHeader.classList.remove('locked');
+        choicesWrap.classList.remove('locked');
+        playStamp();
+        choicesHeader.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    }
+
     function renderScene(id) {
       playGameplayMusic();
       const scene = scenes[id];
@@ -1820,13 +1979,15 @@
           ${supportHTML}
           ${alertHTML}
           ${advisorHTML}
+          ${buildCFUHTML(scene.cfu)}
         </section>
-        <div class="choices-header">YOUR MOVE, MR. PRESIDENT</div>
+        <div class="choices-header" id="choices-header">YOUR MOVE, MR. PRESIDENT</div>
         <section id="choices" class="choices"></section>
       `;
 
       const typeTarget = document.getElementById('typewriter-target');
       if (typeTarget) typewriterInto(typeTarget, scene.text, 12);
+      armCFU(scene.cfu);
 
       const choicesWrap = document.getElementById('choices');
       scene.choices.forEach((choice) => {
@@ -1991,6 +2152,11 @@ On the screens around me, the danger is impossible to ignore. <span class="dange
           title: 'QUICK CONTEXT',
           text: 'The Cold War was a long power struggle between the U.S. and the Soviet Union. Both sides had nuclear weapons. That meant fear, pressure, and bad choices could get deadly fast.'
         },
+        cfu: {
+          question: 'Who feels threatened here?',
+          options: ['Only the United States', 'Only the Soviet Union', 'Both sides feel danger close to home'],
+          feedback: 'Both sides feel threatened: Soviet missiles in Cuba scare the U.S., and U.S. missiles in Turkey scare the Soviet Union. That fear makes every move easier to misread.'
+        },
         advisors: [
           { role: 'GENERAL', text: '"Hit the sites before they\'re ready."' },
           { role: 'DIPLOMAT', text: '"Slow down. Once bombs drop, this gets way harder to control."' },
@@ -2100,6 +2266,11 @@ And once <span class="danger">armed men are staring each other down in the ocean
 
 <strong>Time is the only thing standing between this quarantine and a shooting war.</strong>`,
         support: { title: 'REAL HISTORY', text: 'Kennedy chose a quarantine in real life. It was a middle path. Not weak, not immediate bombing.' },
+        cfu: {
+          question: 'Which move raises pressure without starting war right away?',
+          options: ['Bomb the missile sites immediately', 'Use a naval quarantine line', 'Do nothing and hope it fades'],
+          feedback: 'A quarantine puts real pressure on Soviet ships, but it does not fire first. That is why it can look strong while still leaving room to talk.'
+        },
         advisors: [
           { role: 'GENERAL', text: '"If they cross the line, stop them."' },
           { role: 'DIPLOMAT', text: '"This gives us time. Time matters."' }
@@ -2410,6 +2581,11 @@ And the worst part is this:
 
 <strong>This is the trap the Cold War built.</strong> <em>Two countries so afraid of each other that fear itself becomes the most dangerous weapon in the room.</em>`,
         support: { title: 'THE COLD WAR TRAP', text: 'The U.S. saw missiles in Cuba as a direct threat. The Soviets saw American power near their borders as a threat too. Fear ran both ways.' },
+        cfu: {
+          question: 'Why is this risky?',
+          options: ['Both sides think they are defending themselves', 'Nobody has weapons anymore', 'The public already knows the secret deal'],
+          feedback: 'The danger is that each side sees itself as defensive and the other side as aggressive. That can turn fear into a fast chain reaction.'
+        },
         advisors: [
           { role: 'GENERAL', text: '"Get ready to hit."' },
           { role: 'DIPLOMAT', text: '"Wait for a message. One off-ramp may still be there."' }
@@ -2447,6 +2623,11 @@ Because from the Soviet point of view, <em>America already has missiles sitting 
 
 This crisis was never just about Cuba. <strong>It was about two superpowers who were both terrified of each other — and both pointing weapons at each other's front door.</strong>`,
         support: { title: 'WHY TURKEY MATTERS', text: 'The U.S. had missiles in Turkey near the Soviet Union. That did not make Soviet missiles in Cuba harmless, but it did make the crisis less morally simple.' },
+        cfu: {
+          question: 'Why would this make Kennedy look weak or strong?',
+          options: ['Publicly trading Turkey could look like giving in', 'Ignoring both letters automatically ends the crisis', 'Secret talks are the same as surrender'],
+          feedback: 'Kennedy has to balance image and survival. A public trade might look like backing down, but a private deal can lower danger while protecting his public strength.'
+        },
         advisors: [
           { role: 'HAWKS', text: '"Reject both. Show strength."' },
           { role: 'REALISTS', text: '"Take the first letter publicly. Handle the rest quietly."' }
@@ -2486,6 +2667,11 @@ Others say it could be <span class="hl">a local commander, bad timing, panic, or
 
 <em>Sometimes it ends because somebody, somewhere, made one terrible call — and nobody stopped to ask if it was an accident.</em>`,
         alert: { title: 'THE NIGHTMARE', text: 'In a nuclear crisis, accidents and misunderstandings can be just as deadly as deliberate attacks.' },
+        cfu: {
+          question: 'Why is one incident so dangerous?',
+          options: ['Leaders may mistake an accident for an attack', 'It proves every Soviet leader ordered war', 'It means diplomacy has already worked'],
+          feedback: 'In a tense crisis, leaders may not know whether a shot was ordered or accidental. Retaliating too fast can turn confusion into war.'
+        },
         choices: [
           { label: 'Retaliate Right Now', desc: 'Show that attacking American forces has a price.',
             next: (state) => { state.flags.retaliated_after_incident = true; return state.stats.WORLD_TENSION >= 8 ? 'E1_NUCLEAR_FIRE' : 'E2_MISCALCULATION'; },
