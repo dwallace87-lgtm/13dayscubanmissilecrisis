@@ -1514,8 +1514,11 @@
     const GAMEPLAY_MUSIC_URL = 'https://raw.githubusercontent.com/dwallace87-lgtm/13dayscubanmissilecrisis/refs/heads/main/gameplay%20music.mp3';
     const NUCLEAR_MUSIC_URL = 'https://raw.githubusercontent.com/dwallace87-lgtm/13dayscubanmissilecrisis/refs/heads/main/nuclear%20war%20music.mp3';
     const SAD_ENDING_MUSIC_URL = 'https://raw.githubusercontent.com/dwallace87-lgtm/13dayscubanmissilecrisis/refs/heads/main/sad%20ending.mp3';
+    // Success music for the best historical ending only.
+    const SUCCESS_MUSIC_URL = 'https://raw.githubusercontent.com/dwallace87-lgtm/13dayscubanmissilecrisis/refs/heads/main/success.mp3';
     const NUCLEAR_ENDING_IDS = new Set(['E1_NUCLEAR_FIRE', 'E2_MISCALCULATION']);
     const SAD_ENDING_IDS = new Set(['E3_TOO_LITTLE', 'E4_POLITICAL_COST', 'E5_DIRTY_PEACE']);
+    const SUCCESS_ENDING_IDS = new Set(['E6_HISTORICAL']);
 
     let audioCtx = null;
     let soundEnabled = true;
@@ -1536,6 +1539,13 @@
     sadEndingMusic.loop = true;
     sadEndingMusic.preload = 'auto';
     sadEndingMusic.volume = 0.45;
+
+    // Best-ending success music track. Kept separate from gameplay, nuclear,
+    // and sad-ending beds so the historical outcome has its own loop.
+    const successMusic = new Audio(SUCCESS_MUSIC_URL);
+    successMusic.loop = true;
+    successMusic.preload = 'auto';
+    successMusic.volume = 0.46;
 
     function initAudio() {
       if (!audioCtx) {
@@ -1612,6 +1622,7 @@
       if (!soundEnabled) return;
       if (activeMusicTrack === 'nuclear') playNuclearEndingMusic();
       else if (activeMusicTrack === 'sad') playSadEndingMusic();
+      else if (activeMusicTrack === 'success') playSuccessMusic();
       else if (activeMusicTrack === 'gameplay') playGameplayMusic();
     }
 
@@ -1619,6 +1630,7 @@
       activeMusicTrack = 'gameplay';
       pauseAndReset(nuclearEndingMusic);
       pauseAndReset(sadEndingMusic);
+      pauseAndReset(successMusic);
       if (!soundEnabled) return;
       gameplayMusic.volume = 0.4;
       safelyPlay(gameplayMusic);
@@ -1628,6 +1640,7 @@
       activeMusicTrack = 'nuclear';
       pauseAndReset(gameplayMusic);
       pauseAndReset(sadEndingMusic);
+      pauseAndReset(successMusic);
       if (!soundEnabled) return;
       nuclearEndingMusic.volume = 0.5;
       safelyPlay(nuclearEndingMusic);
@@ -1637,21 +1650,35 @@
       activeMusicTrack = 'sad';
       pauseAndReset(gameplayMusic);
       pauseAndReset(nuclearEndingMusic);
+      pauseAndReset(successMusic);
       if (!soundEnabled) return;
       sadEndingMusic.volume = 0.45;
       safelyPlay(sadEndingMusic);
+    }
+
+    function playSuccessMusic() {
+      activeMusicTrack = 'success';
+      pauseAndReset(gameplayMusic);
+      pauseAndReset(nuclearEndingMusic);
+      pauseAndReset(sadEndingMusic);
+      pauseAndReset(successMusic);
+      if (!soundEnabled) return;
+      successMusic.volume = 0.46;
+      safelyPlay(successMusic);
     }
 
     function pauseAllMusic() {
       gameplayMusic.pause();
       nuclearEndingMusic.pause();
       sadEndingMusic.pause();
+      successMusic.pause();
     }
 
     function stopAllMusic() {
       pauseAndReset(gameplayMusic);
       pauseAndReset(nuclearEndingMusic);
       pauseAndReset(sadEndingMusic);
+      pauseAndReset(successMusic);
     }
 
     function syncAudioToggleUI() {
@@ -2044,6 +2071,7 @@
     function renderEnding(id) {
       if (NUCLEAR_ENDING_IDS.has(id)) playNuclearEndingMusic();
       else if (SAD_ENDING_IDS.has(id)) playSadEndingMusic();
+      else if (SUCCESS_ENDING_IDS.has(id)) playSuccessMusic();
       else playGameplayMusic();
 
       const ending = endings[id];
