@@ -1513,7 +1513,9 @@
     // ===== AUDIO SYSTEM (Web Audio API effects + hosted MP3 music) =====
     const GAMEPLAY_MUSIC_URL = 'https://raw.githubusercontent.com/dwallace87-lgtm/13dayscubanmissilecrisis/refs/heads/main/gameplay%20music.mp3';
     const NUCLEAR_MUSIC_URL = 'https://raw.githubusercontent.com/dwallace87-lgtm/13dayscubanmissilecrisis/refs/heads/main/nuclear%20war%20music.mp3';
+    const SAD_ENDING_MUSIC_URL = 'https://raw.githubusercontent.com/dwallace87-lgtm/13dayscubanmissilecrisis/refs/heads/main/sad%20ending.mp3';
     const NUCLEAR_ENDING_IDS = new Set(['E1_NUCLEAR_FIRE', 'E2_MISCALCULATION']);
+    const SAD_ENDING_IDS = new Set(['E3_TOO_LITTLE', 'E4_POLITICAL_COST', 'E5_DIRTY_PEACE']);
 
     let audioCtx = null;
     let soundEnabled = true;
@@ -1529,6 +1531,11 @@
     nuclearEndingMusic.loop = true;
     nuclearEndingMusic.preload = 'auto';
     nuclearEndingMusic.volume = 0.5;
+
+    const sadEndingMusic = new Audio(SAD_ENDING_MUSIC_URL);
+    sadEndingMusic.loop = true;
+    sadEndingMusic.preload = 'auto';
+    sadEndingMusic.volume = 0.45;
 
     function initAudio() {
       if (!audioCtx) {
@@ -1604,12 +1611,14 @@
       initAudio();
       if (!soundEnabled) return;
       if (activeMusicTrack === 'nuclear') playNuclearEndingMusic();
+      else if (activeMusicTrack === 'sad') playSadEndingMusic();
       else if (activeMusicTrack === 'gameplay') playGameplayMusic();
     }
 
     function playGameplayMusic() {
       activeMusicTrack = 'gameplay';
       pauseAndReset(nuclearEndingMusic);
+      pauseAndReset(sadEndingMusic);
       if (!soundEnabled) return;
       gameplayMusic.volume = 0.4;
       safelyPlay(gameplayMusic);
@@ -1618,19 +1627,31 @@
     function playNuclearEndingMusic() {
       activeMusicTrack = 'nuclear';
       pauseAndReset(gameplayMusic);
+      pauseAndReset(sadEndingMusic);
       if (!soundEnabled) return;
       nuclearEndingMusic.volume = 0.5;
       safelyPlay(nuclearEndingMusic);
     }
 
+    function playSadEndingMusic() {
+      activeMusicTrack = 'sad';
+      pauseAndReset(gameplayMusic);
+      pauseAndReset(nuclearEndingMusic);
+      if (!soundEnabled) return;
+      sadEndingMusic.volume = 0.45;
+      safelyPlay(sadEndingMusic);
+    }
+
     function pauseAllMusic() {
       gameplayMusic.pause();
       nuclearEndingMusic.pause();
+      sadEndingMusic.pause();
     }
 
     function stopAllMusic() {
       pauseAndReset(gameplayMusic);
       pauseAndReset(nuclearEndingMusic);
+      pauseAndReset(sadEndingMusic);
     }
 
     function syncAudioToggleUI() {
@@ -2022,6 +2043,7 @@
 
     function renderEnding(id) {
       if (NUCLEAR_ENDING_IDS.has(id)) playNuclearEndingMusic();
+      else if (SAD_ENDING_IDS.has(id)) playSadEndingMusic();
       else playGameplayMusic();
 
       const ending = endings[id];
