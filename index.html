@@ -270,20 +270,6 @@
 
     .top-banner-center { flex: 1; text-align: center; }
 
-    .day-counter {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
-      letter-spacing: 0.15em;
-      background: rgba(0,0,0,0.4);
-      padding: 3px 10px;
-      border: 1px solid rgba(255,255,255,0.3);
-      border-radius: 2px;
-    }
-
-    .day-counter strong {
-      color: #ffeb99;
-      font-size: 14px;
-    }
 
     .blink-dot {
       display: inline-block;
@@ -1470,7 +1456,6 @@
       .intro-stamp { font-size: 40px; padding: 8px 18px; }
       .sidebar h1 { font-size: 40px; }
       .top-banner { font-size: 10px; padding: 6px 8px; }
-      .day-counter { font-size: 10px; }
       .ticker-content { font-size: 10px; }
       .scene-body strong, .scene-body .punch { font-size: 1.15em; }
     }
@@ -1500,7 +1485,6 @@
     <div class="top-banner">
       <span><span class="blink-dot"></span>CLASSIFIED</span>
       <span class="top-banner-center">// EXECUTIVE BRIEFING // OCTOBER 1962 //</span>
-      <span class="day-counter">DAY <strong id="day-num">1</strong>/13</span>
     </div>
 
     <aside class="sidebar">
@@ -1802,8 +1786,7 @@
         rejected_both_letters: false, retaliated_after_incident: false
       },
       history: [],
-      docCount: 1,
-      day: 1
+      docCount: 1
     };
 
     const initialState = JSON.parse(JSON.stringify({stats: game.stats, flags: game.flags}));
@@ -1910,7 +1893,6 @@
         document.getElementById(`meter-${key}`).style.width = `${val * 10}%`;
       });
       updateDefcon();
-      document.getElementById('day-num').textContent = game.day;
 
       const historyList = document.getElementById('history-list');
       historyList.innerHTML = '';
@@ -2086,8 +2068,6 @@
       }
 
       game.docCount++;
-      // Day advances roughly every 2 nodes, capped at 13
-      game.day = Math.min(13, 1 + Math.floor((game.docCount - 1) / 1.6));
 
       const imageHTML = scene.image ? `
         <div class="scene-visual-wrap">
@@ -2257,7 +2237,6 @@
       game.flags = JSON.parse(JSON.stringify(initialState.flags));
       game.history = [];
       game.docCount = 1;
-      game.day = 1;
       document.getElementById('flash-log').innerHTML = '';
       activeMusicTrack = 'gameplay';
       playGameplayMusic();
