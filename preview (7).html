@@ -1,0 +1,1708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>13 Days: You Are President Kennedy | V2</title>
+  <style>
+    :root {
+      --bg: #14110d;
+      --bg-2: #0e0c09;
+      --panel: #262018;
+      --panel-2: #31281e;
+      --text: #f4ead2;
+      --muted: #d3c4a3;
+      --accent: #80d7c4;
+      --danger: #ff6b5f;
+      --warn: #f3c761;
+      --good: #9ad487;
+      --border: #7b694b;
+      --shadow: 0 12px 32px rgba(0,0,0,0.38);
+      --radius: 8px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      background:
+        linear-gradient(rgba(255,255,255,0.02) 50%, rgba(0,0,0,0.02) 50%),
+        radial-gradient(circle at top, rgba(243,199,97,0.08), transparent 26%),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
+      background-size: 100% 4px, 100% 100%, 100% 100%;
+      color: var(--text);
+      font-family: "Trebuchet MS", Arial, sans-serif;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.18) 100%);
+      mix-blend-mode: multiply;
+      z-index: 2;
+    }
+
+    .app {
+      display: grid;
+      grid-template-columns: 350px 1fr;
+      min-height: 100vh;
+      position: relative;
+      z-index: 1;
+    }
+
+    .sidebar {
+      background: linear-gradient(180deg, rgba(24,20,15,0.96), rgba(12,10,8,0.96));
+      border-right: 3px solid var(--border);
+      padding: 22px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .main {
+      padding: 28px;
+      max-width: 1120px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .eyebrow {
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-size: 11px;
+      color: var(--warn);
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+
+    h1, h2, h3 {
+      margin: 0;
+      line-height: 1.05;
+      font-family: Impact, "Arial Black", sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    h1 {
+      font-size: 36px;
+      margin-bottom: 8px;
+      text-shadow: 2px 2px 0 rgba(0,0,0,0.25);
+    }
+
+    h2 {
+      font-size: 42px;
+      margin-bottom: 14px;
+      color: var(--text);
+      text-shadow: 2px 2px 0 rgba(0,0,0,0.22);
+    }
+
+    .sub {
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 14px;
+      margin-bottom: 18px;
+    }
+
+    .panel {
+      background: linear-gradient(180deg, rgba(49,40,30,0.96), rgba(31,26,20,0.96));
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .stats, .meta, .history {
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .stat {
+      margin-bottom: 16px;
+    }
+
+    .stat:last-child { margin-bottom: 0; }
+
+    .stat-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 6px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .meter {
+      font-family: "Courier New", monospace;
+      font-size: 16px;
+      letter-spacing: 0.08em;
+      line-height: 1;
+    }
+
+    .meter.danger { color: var(--danger); }
+    .meter.warn { color: var(--warn); }
+    .meter.good { color: var(--good); }
+    .meter.accent { color: var(--accent); }
+
+    .meta ul {
+      margin: 8px 0 0;
+      padding-left: 18px;
+      line-height: 1.6;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .history h3, .meta h3 {
+      font-size: 14px;
+      color: var(--accent);
+      margin-bottom: 10px;
+      letter-spacing: 0.08em;
+    }
+
+    .history-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .history-item {
+      padding: 10px 12px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+      border-radius: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .scene {
+      padding: 24px;
+      margin-bottom: 18px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .scene::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(135deg, rgba(128,215,196,0.05), transparent 35%);
+    }
+
+
+    .scene-visual-wrap {
+      margin: 18px 0 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .scene-visual {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      background: #0b0b0b;
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .scene-visual img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      image-rendering: auto;
+    }
+
+    .scene-visual-caption {
+      margin-top: 8px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      text-align: center;
+      font-weight: 800;
+    }
+
+
+    .scene-body {
+      font-size: 22px;
+      line-height: 1.65;
+      color: var(--text);
+      white-space: pre-wrap;
+      position: relative;
+      z-index: 1;
+    }
+
+    .scene-body .emph {
+      color: #fff4d0;
+      font-weight: 900;
+      letter-spacing: 0.01em;
+    }
+
+    .scene-body .danger-text {
+      color: #ffb3a8;
+      font-weight: 900;
+    }
+
+    .scene-body .cool-text {
+      color: #aeeedf;
+      font-weight: 900;
+    }
+
+    .scene-body .muted-ital {
+      color: #e7d9b7;
+      font-style: italic;
+    }
+
+    .type-cursor::after {
+      content: "▌";
+      display: inline-block;
+      margin-left: 2px;
+      color: var(--warn);
+      animation: blinkCursor 0.85s steps(1) infinite;
+    }
+
+    @keyframes blinkCursor {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: 0; }
+    }
+
+
+    .support-box, .alert-box {
+      margin-top: 18px;
+      padding: 15px 16px;
+      border-radius: 8px;
+      border: 2px solid;
+      position: relative;
+      z-index: 1;
+    }
+
+    .support-box {
+      background: rgba(128,215,196,0.09);
+      border-color: rgba(128,215,196,0.28);
+      color: #daf4ec;
+    }
+
+    .alert-box {
+      background: rgba(255,107,95,0.09);
+      border-color: rgba(255,107,95,0.28);
+      color: #ffd8d4;
+    }
+
+    .support-title {
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 8px;
+      color: var(--accent);
+    }
+
+    .alert-title {
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 8px;
+      color: #ffb4ac;
+    }
+
+    .advisor-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .advisor-card {
+      border: 2px solid rgba(255,255,255,0.08);
+      background: rgba(0,0,0,0.14);
+      border-radius: 8px;
+      padding: 12px;
+    }
+
+    .advisor-card h3 {
+      font-size: 14px;
+      color: var(--warn);
+      margin-bottom: 6px;
+    }
+
+    .advisor-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.5;
+      font-size: 14px;
+    }
+
+    .flash-log {
+      margin-bottom: 18px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      min-height: 34px;
+    }
+
+    .flash-pill {
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border: 2px solid;
+      animation: popIn 0.35s ease;
+    }
+
+    .flash-pill.up {
+      background: rgba(255,107,95,0.12);
+      border-color: rgba(255,107,95,0.35);
+      color: #ffb4ac;
+    }
+
+    .flash-pill.down {
+      background: rgba(128,215,196,0.12);
+      border-color: rgba(128,215,196,0.35);
+      color: #c7f3e7;
+    }
+
+    @keyframes popIn {
+      from { transform: translateY(6px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .choices {
+      display: grid;
+      gap: 14px;
+    }
+
+    .choice {
+      width: 100%;
+      text-align: left;
+      background: linear-gradient(180deg, #3b342a, #262119);
+      color: var(--text);
+      border: 2px solid #887555;
+      border-radius: 8px;
+      padding: 18px;
+      cursor: pointer;
+      transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease;
+      box-shadow: var(--shadow);
+    }
+
+    .choice:hover, .choice:focus-visible {
+      transform: translateY(-2px) scale(1.01);
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(128,215,196,0.10), var(--shadow);
+      outline: none;
+    }
+
+    .choice-label {
+      display: block;
+      font-family: Impact, "Arial Black", sans-serif;
+      font-size: 22px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      margin-bottom: 6px;
+    }
+
+    .choice-desc {
+      display: block;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.55;
+      text-transform: none;
+    }
+
+    .result-banner {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+      padding: 9px 12px;
+      border-radius: 999px;
+      border: 2px solid rgba(255,107,95,0.35);
+      background: rgba(255,107,95,0.12);
+      color: #ffbeb8;
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .result-banner.goodish {
+      border-color: rgba(154,212,135,0.35);
+      background: rgba(154,212,135,0.12);
+      color: #d4f3ca;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .summary-card {
+      padding: 16px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.04);
+      border: 2px solid rgba(255,255,255,0.08);
+    }
+
+    .summary-card h3 {
+      font-size: 13px;
+      margin-bottom: 8px;
+      color: var(--accent);
+    }
+
+    .summary-card ul {
+      margin: 0;
+      padding-left: 18px;
+      line-height: 1.55;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .reflection {
+      margin-top: 18px;
+      padding: 16px;
+      border-radius: 8px;
+      background: rgba(243,199,97,0.09);
+      border: 2px solid rgba(243,199,97,0.26);
+      color: #ffeec1;
+      line-height: 1.6;
+    }
+
+    .footer-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .btn {
+      border: 2px solid var(--border);
+      background: linear-gradient(180deg, rgba(128,215,196,0.14), rgba(128,215,196,0.07));
+      color: var(--text);
+      padding: 12px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-size: 13px;
+    }
+
+    .btn.secondary {
+      background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.03));
+    }
+
+    .stat-flash {
+      animation: statPulse 0.55s ease;
+    }
+
+    @keyframes statPulse {
+      0% { transform: scale(1); }
+      35% { transform: scale(1.08); }
+      100% { transform: scale(1); }
+    }
+
+    @media (max-width: 980px) {
+      .app {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: static;
+        height: auto;
+        border-right: none;
+        border-bottom: 3px solid var(--border);
+      }
+
+      .main { padding: 18px; }
+      h2 { font-size: 32px; }
+      .scene-body { font-size: 19px; }
+      .choice-label { font-size: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="eyebrow">Cold War Crisis Simulator</div>
+      <h1>13 Days</h1>
+      <div class="sub">You are President Kennedy. Soviet missiles are in Cuba. One bad move could blow up the world.</div>
+
+      <section class="panel stats" aria-label="Game stats">
+        <div class="stat" id="wrap-WORLD_TENSION">
+          <div class="stat-head"><span>Global Threat Level</span><strong id="stat-WORLD_TENSION">2</strong></div>
+          <div id="meter-WORLD_TENSION" class="meter danger"></div>
+        </div>
+        <div class="stat" id="wrap-US_CREDIBILITY">
+          <div class="stat-head"><span>U.S. Power Image</span><strong id="stat-US_CREDIBILITY">5</strong></div>
+          <div id="meter-US_CREDIBILITY" class="meter accent"></div>
+        </div>
+        <div class="stat" id="wrap-DIPLOMATIC_SPACE">
+          <div class="stat-head"><span>Room to Negotiate</span><strong id="stat-DIPLOMATIC_SPACE">5</strong></div>
+          <div id="meter-DIPLOMATIC_SPACE" class="meter good"></div>
+        </div>
+        <div class="stat" id="wrap-MILITARY_PRESSURE">
+          <div class="stat-head"><span>Generals in Your Ear</span><strong id="stat-MILITARY_PRESSURE">4</strong></div>
+          <div id="meter-MILITARY_PRESSURE" class="meter warn"></div>
+        </div>
+        <div class="stat" id="wrap-PUBLIC_FEAR">
+          <div class="stat-head"><span>Panic Level</span><strong id="stat-PUBLIC_FEAR">5</strong></div>
+          <div id="meter-PUBLIC_FEAR" class="meter warn"></div>
+        </div>
+      </section>
+
+      <section class="panel meta">
+        <h3>What This Is Teaching</h3>
+        <ul>
+          <li>Why the Cuban Missile Crisis felt like the world was one click from disaster</li>
+          <li>How Cold War fear shaped what both sides did</li>
+          <li>Why leaders were stuck choosing between bad and worse</li>
+          <li>Why the “best” ending still is not morally clean</li>
+        </ul>
+      </section>
+
+      <section class="panel history">
+        <h3>Your Path So Far</h3>
+        <div id="history-list" class="history-list"></div>
+      </section>
+    </aside>
+
+    <main class="main">
+      <div id="flash-log" class="flash-log"></div>
+      <div id="scene-container"></div>
+    </main>
+  </div>
+
+  <script>
+    const game = {
+      stats: {
+        WORLD_TENSION: 2,
+        US_CREDIBILITY: 5,
+        DIPLOMATIC_SPACE: 5,
+        MILITARY_PRESSURE: 4,
+        PUBLIC_FEAR: 5
+      },
+      flags: {
+        used_airstrike: false,
+        used_invasion: false,
+        announced_quarantine: false,
+        consulted_un: false,
+        secret_turkey_deal: false,
+        promised_no_invasion_of_cuba: false,
+        rejected_both_letters: false,
+        retaliated_after_incident: false
+      },
+      history: []
+    };
+
+    const initialState = JSON.parse(JSON.stringify(game));
+
+    function clamp(num, min, max) {
+      return Math.max(min, Math.min(max, num));
+    }
+
+    function meterBlocks(value) {
+      const filled = '■'.repeat(value);
+      const empty = '□'.repeat(10 - value);
+      return filled + empty;
+    }
+
+    function toneClassForStat(key) {
+      if (key === 'WORLD_TENSION') return 'danger';
+      if (key === 'DIPLOMATIC_SPACE') return 'good';
+      if (key === 'MILITARY_PRESSURE' || key === 'PUBLIC_FEAR') return 'warn';
+      return 'accent';
+    }
+
+    function prettyStatName(key) {
+      const map = {
+        WORLD_TENSION: 'Global Threat',
+        US_CREDIBILITY: 'Power Image',
+        DIPLOMATIC_SPACE: 'Negotiate',
+        MILITARY_PRESSURE: 'Generals',
+        PUBLIC_FEAR: 'Panic'
+      };
+      return map[key] || key;
+    }
+
+
+    function stylizeText(text) {
+      return text
+        .replace(/\b(Cold War|nuclear war|missiles|Cuba|Turkey|Soviet Union|United States|quarantine|airstrike|invasion|diplomacy|DEFCON|U\.N\.|war)\b/g, '<span class="emph">$1</span>')
+        .replace(/\b(world ends?|millions die|apocalypse|catastrophe|shot down|retaliate|explode|collapse)\b/gi, '<span class="danger-text">$1</span>')
+        .replace(/\b(backchannel|compromise|restrained|restraint|survives?|survival|off-ramp)\b/gi, '<span class="cool-text">$1</span>')
+        .replace(/\b(I know\.|The problem is\.|That is the problem\.|And that is the horror of this whole thing\.|This is Cold War nightmare stuff\.)/g, '<span class="muted-ital">$1</span>');
+    }
+
+    function typewriterInto(el, rawText, speed = 14) {
+      if (!el) return;
+      const text = rawText || '';
+      let i = 0;
+      el.innerHTML = '';
+      el.classList.add('type-cursor');
+
+      function tick() {
+        i += 2;
+        const current = text.slice(0, i);
+        el.innerHTML = stylizeText(current);
+        if (i < text.length) {
+          window.requestAnimationFrame(() => setTimeout(tick, speed));
+        } else {
+          el.classList.remove('type-cursor');
+        }
+      }
+      tick();
+    }
+
+    function updateSidebar() {
+      Object.keys(game.stats).forEach((key) => {
+        const val = game.stats[key];
+        document.getElementById(`stat-${key}`).textContent = val;
+        document.getElementById(`meter-${key}`).textContent = meterBlocks(val);
+      });
+
+      const historyList = document.getElementById('history-list');
+      historyList.innerHTML = '';
+      if (!game.history.length) {
+        const div = document.createElement('div');
+        div.className = 'history-item';
+        div.textContent = 'No calls made yet.';
+        historyList.appendChild(div);
+      } else {
+        game.history.slice().reverse().forEach(item => {
+          const div = document.createElement('div');
+          div.className = 'history-item';
+          div.textContent = item;
+          historyList.appendChild(div);
+        });
+      }
+    }
+
+    function flashChanges(effects = {}) {
+      const flashLog = document.getElementById('flash-log');
+      flashLog.innerHTML = '';
+
+      Object.entries(effects).forEach(([key, change]) => {
+        if (!change) return;
+        const pill = document.createElement('div');
+        pill.className = `flash-pill ${change > 0 ? 'up' : 'down'}`;
+        pill.textContent = `${prettyStatName(key)} ${change > 0 ? '+' : ''}${change}`;
+
+        flashLog.appendChild(pill);
+
+        const wrap = document.getElementById(`wrap-${key}`);
+        if (wrap) {
+          wrap.classList.remove('stat-flash');
+          void wrap.offsetWidth;
+          wrap.classList.add('stat-flash');
+        }
+      });
+    }
+
+    function applyEffects(effects = {}) {
+      Object.entries(effects).forEach(([key, val]) => {
+        game.stats[key] = clamp(game.stats[key] + val, 0, 10);
+      });
+    }
+
+    function applyFlags(flags = {}) {
+      Object.entries(flags).forEach(([key, val]) => {
+        game.flags[key] = val;
+      });
+    }
+
+    function resolveNext(next) {
+      return typeof next === 'function' ? next(game) : next;
+    }
+
+    function renderScene(id) {
+      const scene = scenes[id];
+      const container = document.getElementById('scene-container');
+      if (!scene) {
+        container.innerHTML = `<section class="panel scene"><h2>Missing Scene</h2><div class="scene-body">That scene did not load.</div></section>`;
+        return;
+      }
+
+      const imageHTML = scene.image ? `
+        <div class="scene-visual-wrap">
+          <div class="scene-visual">
+            <img src="${scene.image}" alt="${scene.title}">
+          </div>
+          <div class="scene-visual-caption">${scene.imageCaption || scene.title}</div>
+        </div>` : '';
+
+      const supportHTML = scene.support ? `
+        <div class="support-box">
+          <div class="support-title">${scene.support.title}</div>
+          <div>${scene.support.text}</div>
+        </div>` : '';
+
+      const alertHTML = scene.alert ? `
+        <div class="alert-box">
+          <div class="alert-title">${scene.alert.title}</div>
+          <div>${scene.alert.text}</div>
+        </div>` : '';
+
+      const advisorHTML = scene.advisors ? `
+        <div class="advisor-row">
+          ${scene.advisors.map(a => `
+            <div class="advisor-card">
+              <h3>${a.role}</h3>
+              <p>${a.text}</p>
+            </div>
+          `).join('')}
+        </div>` : '';
+
+      container.innerHTML = `
+        <section class="panel scene">
+          <div class="eyebrow">${scene.eyebrow || 'Situation Room'}</div>
+          <h2>${scene.title}</h2>
+          ${imageHTML}
+          <div class="scene-body type-cursor" id="typewriter-target" data-fulltext="${scene.text.replace(/"/g, '&quot;')}"></div>
+          ${supportHTML}
+          ${alertHTML}
+          ${advisorHTML}
+        </section>
+        <section id="choices" class="choices"></section>
+      `;
+
+      const typeTarget = document.getElementById('typewriter-target');
+      if (typeTarget) {
+        const fullText = typeTarget.getAttribute('data-fulltext') || '';
+        typewriterInto(typeTarget, fullText, 12);
+      }
+
+      const choicesWrap = document.getElementById('choices');
+      scene.choices.forEach((choice) => {
+        const btn = document.createElement('button');
+        btn.className = 'choice';
+        btn.innerHTML = `
+          <span class="choice-label">${choice.label}</span>
+          <span class="choice-desc">${choice.desc || ''}</span>
+        `;
+        btn.addEventListener('click', () => {
+          applyEffects(choice.effects);
+          applyFlags(choice.flags);
+          flashChanges(choice.effects || {});
+          game.history.push(`${scene.title}: ${choice.label}`);
+          updateSidebar();
+          const nextId = resolveNext(choice.next);
+          if (endings[nextId]) renderEnding(nextId);
+          else renderScene(nextId);
+        });
+        choicesWrap.appendChild(btn);
+      });
+    }
+
+    function renderEnding(id) {
+      const ending = endings[id];
+      const container = document.getElementById('scene-container');
+      const bannerClass = ending.tone === 'goodish' || ending.tone === 'mixed'
+        ? 'result-banner goodish'
+        : 'result-banner';
+      const imageHTML = ending.image ? `
+        <div class="scene-visual-wrap">
+          <div class="scene-visual">
+            <img src="${ending.image}" alt="${ending.title}">
+          </div>
+          <div class="scene-visual-caption">${ending.imageCaption || ending.title}</div>
+        </div>` : '';
+
+      container.innerHTML = `
+        <section class="panel scene">
+          <div class="${bannerClass}">${ending.result}</div>
+          <h2>${ending.title}</h2>
+          ${imageHTML}
+          <div class="scene-body type-cursor" id="typewriter-target" data-fulltext="${ending.text.replace(/"/g, '&quot;')}"></div>
+
+          <div class="summary-grid">
+            <div class="summary-card">
+              <h3>Final Readout</h3>
+              <div>Global Threat Level: <strong>${game.stats.WORLD_TENSION}</strong></div>
+              <div>U.S. Power Image: <strong>${game.stats.US_CREDIBILITY}</strong></div>
+              <div>Room to Negotiate: <strong>${game.stats.DIPLOMATIC_SPACE}</strong></div>
+              <div>Generals in Your Ear: <strong>${game.stats.MILITARY_PRESSURE}</strong></div>
+              <div>Panic Level: <strong>${game.stats.PUBLIC_FEAR}</strong></div>
+            </div>
+            <div class="summary-card">
+              <h3>What This Shows</h3>
+              <div>The Cuban Missile Crisis was not about one obvious good choice. It was about fear, pressure, pride, timing, and trying not to let one bad move turn into millions of deaths.</div>
+            </div>
+            <div class="summary-card">
+              <h3>Your Path</h3>
+              <ul>${game.history.map(item => `<li>${item}</li>`).join('')}</ul>
+            </div>
+          </div>
+
+          <div class="reflection"><strong>Reflection:</strong> ${ending.reflection}</div>
+
+          <div class="footer-actions">
+            <button id="restart-btn" class="btn">Restart</button>
+            <button id="copy-btn" class="btn secondary">Copy Summary</button>
+          </div>
+        </section>
+      `;
+
+      const typeTarget = document.getElementById('typewriter-target');
+      if (typeTarget) {
+        const fullText = typeTarget.getAttribute('data-fulltext') || '';
+        typewriterInto(typeTarget, fullText, 12);
+      }
+
+      document.getElementById('restart-btn').addEventListener('click', restartGame);
+      document.getElementById('copy-btn').addEventListener('click', async () => {
+        const summary = `${ending.title}\n${ending.result}\n\nPath:\n- ${game.history.join('\n- ')}\n\nReflection:\n${ending.reflection}`;
+        try {
+          await navigator.clipboard.writeText(summary);
+          alert('Summary copied.');
+        } catch {
+          alert('Copy failed on this browser.');
+        }
+      });
+    }
+
+    function restartGame() {
+      game.stats = JSON.parse(JSON.stringify(initialState.stats));
+      game.flags = JSON.parse(JSON.stringify(initialState.flags));
+      game.history = [];
+      document.getElementById('flash-log').innerHTML = '';
+      updateSidebar();
+      renderScene('OPENING');
+    }
+
+    const scenes = {
+      OPENING: {
+        title: 'The Photos Hit the Table',
+        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/us-constitution-workbook/refs/heads/main/node1.png',
+        imageCaption: 'Node 1 art',
+        text: `The photos hit the table, and the whole room goes dead quiet.
+
+U.S. spy planes just confirmed it: the Soviet Union is building missile sites in Cuba.
+
+Cuba is only about 90 miles from Florida.
+
+So let me say that plainly. If those missiles go live, they can hit the United States fast.
+
+This is Cold War nightmare stuff. America and the Soviet Union already fear each other. We both have nuclear weapons. We both think the other side is trying to get ahead.
+
+Now I have to answer that threat.
+
+If I go too soft, I look weak.
+
+If I go too hard, I could start a nuclear war.`,
+        support: {
+          title: 'Quick context',
+          text: 'The Cold War was a long power struggle between the United States and the Soviet Union. Both sides had nuclear weapons. That meant fear, pressure, and bad choices could get deadly fast.'
+        },
+        advisors: [
+          { role: 'General', text: '“Hit the sites before they’re ready.”' },
+          { role: 'Diplomat', text: '“Slow down. Once bombs drop, this gets way harder to control.”' },
+          { role: 'Public Mood', text: '“America expects you to look strong.”' }
+        ],
+        choices: [
+          {
+            label: 'Airstrike',
+            desc: 'Fast. Aggressive. Could spiral instantly.',
+            next: 'AIRSTRIKE',
+            effects: { WORLD_TENSION: 3, US_CREDIBILITY: 2, DIPLOMATIC_SPACE: -2, MILITARY_PRESSURE: 1 },
+            flags: { used_airstrike: true }
+          },
+          {
+            label: 'Invade Cuba',
+            desc: 'Maximum force. Maximum risk.',
+            next: 'INVASION',
+            effects: { WORLD_TENSION: 4, US_CREDIBILITY: 2, DIPLOMATIC_SPACE: -3, MILITARY_PRESSURE: 2 },
+            flags: { used_invasion: true }
+          },
+          {
+            label: 'Quarantine',
+            desc: 'Strong middle move. Still dangerous.',
+            next: 'QUARANTINE',
+            effects: { WORLD_TENSION: 2, US_CREDIBILITY: 1, DIPLOMATIC_SPACE: 1, MILITARY_PRESSURE: 1 },
+            flags: { announced_quarantine: true }
+          },
+          {
+            label: 'Talk First',
+            desc: 'Safer at first. Might make you look weak.',
+            next: 'DIPLOMACY',
+            effects: { WORLD_TENSION: 1, US_CREDIBILITY: -1, DIPLOMATIC_SPACE: 2, PUBLIC_FEAR: 1 }
+          }
+        ]
+      },
+
+      AIRSTRIKE: {
+        title: 'Hit First',
+        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/us-constitution-workbook/refs/heads/main/node2.png',
+        imageCaption: 'Node 2 art',
+        text: `I could hit Cuba right now. Blow up the missile sites before they’re ready.
+
+It sounds simple.
+
+It is not simple.
+
+We might miss some sites.
+
+We might kill Soviet troops.
+
+We might turn Cuba into the spark that lights up Berlin, Europe, and way more than Europe.
+
+This is the trap with a military answer. It looks clean for about five seconds.
+
+Then people start dying, and everybody starts reacting.`,
+        alert: {
+          title: 'Danger',
+          text: 'Once the U.S. bombs Cuba, the Soviets may not see this as a limited move. They may see it as the start of a bigger war.'
+        },
+        advisors: [
+          { role: 'General', text: '“Finish it fast. Don’t hesitate now.”' },
+          { role: 'Diplomat', text: '“If this goes wrong, we may lose control of the whole crisis.”' }
+        ],
+        choices: [
+          {
+            label: 'Hit Again',
+            desc: 'Double down and hope force solves what force just made worse.',
+            next: 'SECOND_STRIKE',
+            effects: { WORLD_TENSION: 3, DIPLOMATIC_SPACE: -2 }
+          },
+          {
+            label: 'Go to the U.N.',
+            desc: 'Try diplomacy after violence and hope the world helps calm things down.',
+            next: 'UN_AFTER_STRIKE',
+            effects: { US_CREDIBILITY: -1, DIPLOMATIC_SPACE: 1 },
+            flags: { consulted_un: true }
+          },
+          {
+            label: 'Prep an Invasion',
+            desc: 'Move toward an even bigger military answer.',
+            next: 'INVASION_AFTER_STRIKE',
+            effects: { WORLD_TENSION: 2, MILITARY_PRESSURE: 2 }
+          }
+        ]
+      },
+
+      INVASION: {
+        title: 'Take the Island',
+        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/us-constitution-workbook/refs/heads/main/node3.jpg',
+        imageCaption: 'Node 3 art',
+        text: `If the missiles are in Cuba, maybe the only real answer is to take Cuba.
+
+That means invasion.
+
+Some people around me love this idea. It removes the missiles. It humiliates Castro. It tells the Soviets not to test us in our own backyard.
+
+But invasion is not surgery.
+
+It is blood, chaos, and momentum.
+
+And once American troops start killing Soviet troops, this stops being about one island.
+
+Now it is a superpower war.`,
+        support: {
+          title: 'Why this was terrifying',
+          text: 'The U.S. had already backed the failed Bay of Pigs invasion in 1961. Cuba and the Soviet Union expected another invasion might happen.'
+        },
+        advisors: [
+          { role: 'General', text: '“If you’re serious, go all the way.”' },
+          { role: 'JFK brain', text: '“What if Soviet commanders in Cuba use nukes once we land?”' }
+        ],
+        choices: [
+          {
+            label: 'Invade Now',
+            desc: 'Go all in and hope sheer force ends it before it gets worse.',
+            next: 'E1_NUCLEAR_FIRE',
+            effects: { WORLD_TENSION: 4, DIPLOMATIC_SPACE: -3 }
+          },
+          {
+            label: 'Ultimatum',
+            desc: 'Threaten invasion, but leave a tiny opening to back down.',
+            next: 'ULTIMATUM',
+            effects: { US_CREDIBILITY: 1, DIPLOMATIC_SPACE: 1, WORLD_TENSION: 1 }
+          },
+          {
+            label: 'Threat + Secret Talks',
+            desc: 'Hold the knife up while quietly trying to cut a deal.',
+            next: 'INVASION_SECRET_TALKS',
+            effects: { DIPLOMATIC_SPACE: 2, MILITARY_PRESSURE: 1 }
+          }
+        ]
+      },
+
+      QUARANTINE: {
+        title: 'Draw the Line at Sea',
+        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/us-constitution-workbook/refs/heads/main/node4.png',
+        imageCaption: 'Node 4 art',
+        text: `I decide not to bomb Cuba. Not yet.
+
+Instead, I set up a naval quarantine.
+
+That means U.S. warships will stop Soviet ships from bringing more military gear into Cuba.
+
+It’s a tough move, but not the toughest move. I’m showing strength without firing the first shot.
+
+At least that’s the idea.
+
+Because here’s the problem: if a Soviet ship refuses to stop, my Navy has to decide what happens next.
+
+And once armed men start staring each other down in the ocean, things can go bad real fast.`,
+        support: {
+          title: 'Real history',
+          text: 'Kennedy chose a quarantine in real life. It was a middle path. Not weak, not immediate bombing.'
+        },
+        advisors: [
+          { role: 'General', text: '“If they cross the line, stop them.”' },
+          { role: 'Diplomat', text: '“This gives us time. Time matters.”' }
+        ],
+        choices: [
+          {
+            label: 'Search Every Ship',
+            desc: 'Maximum control. Serious risk of a direct clash.',
+            next: 'SEARCH_SHIPS',
+            effects: { WORLD_TENSION: 2, US_CREDIBILITY: 1, DIPLOMATIC_SPACE: -1 }
+          },
+          {
+            label: 'Backchannel Deal',
+            desc: 'Look tough in public. Get realistic in private.',
+            next: 'BACKCHANNEL',
+            effects: { WORLD_TENSION: 1, DIPLOMATIC_SPACE: 2 }
+          },
+          {
+            label: 'Let Some Pass',
+            desc: 'Lower the risk now, but people may say you blinked.',
+            next: 'LET_SHIPS_PASS',
+            effects: { WORLD_TENSION: -1, US_CREDIBILITY: -2, DIPLOMATIC_SPACE: 1 }
+          }
+        ]
+      },
+
+      DIPLOMACY: {
+        title: 'Talk Before Bombs',
+        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/us-constitution-workbook/refs/heads/main/node5.jpg',
+        imageCaption: 'Node 5 art',
+        text: `I do not bomb. I do not send ships first. I try words.
+
+That sounds humane. Responsible. Maybe even smart.
+
+It also sounds weak to a lot of people in this room.
+
+Every hour I spend talking is another hour those missile sites may be getting stronger.
+
+That is the problem.
+
+Diplomacy can save lives.
+
+But diplomacy without pressure can also look like permission.`,
+        advisors: [
+          { role: 'Diplomat', text: '“You still have room to stop this without blood.”' },
+          { role: 'General', text: '“Or you’re giving them time.”' }
+        ],
+        choices: [
+          {
+            label: 'Keep Talking',
+            desc: 'Trust negotiation and restraint.',
+            next: 'DIPLOMACY_ONLY',
+            effects: { US_CREDIBILITY: -2, DIPLOMATIC_SPACE: 1, WORLD_TENSION: 1 }
+          },
+          {
+            label: 'Shift to Quarantine',
+            desc: 'Move from words alone to a harder middle move.',
+            next: 'BACKCHANNEL',
+            effects: { WORLD_TENSION: 1, US_CREDIBILITY: 1, DIPLOMATIC_SPACE: 1 },
+            flags: { announced_quarantine: true }
+          },
+          {
+            label: 'Threaten an Airstrike',
+            desc: 'Talk, but make sure everyone sees the gun on the table.',
+            next: 'THREATEN_STRIKE',
+            effects: { WORLD_TENSION: 2, US_CREDIBILITY: 1, DIPLOMATIC_SPACE: -1 }
+          }
+        ]
+      },
+
+      SECOND_STRIKE: {
+        title: 'Double Down',
+        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/us-constitution-workbook/refs/heads/main/node6.png',
+        imageCaption: 'Node 6 art',
+        text: `The first strike did not solve it cleanly.
+
+So now the pressure is to go harder.
+
+More planes. More bombs. More certainty that this is turning from crisis into war.
+
+The logic is brutal: if the first attack did not fully solve it, then maybe a bigger one will.
+
+That is how people talk when things are slipping out of control.`,
+        alert: {
+          title: 'The spiral',
+          text: 'Every new attack makes it harder to stop. Escalation has momentum.'
+        },
+        choices: [
+          {
+            label: 'Keep Escalating',
+            desc: 'Push until nobody can accuse you of backing down.',
+            next: (state) => state.stats.WORLD_TENSION >= 8 ? 'E1_NUCLEAR_FIRE' : 'E2_MISCALCULATION'
+          },
+          {
+            label: 'Pull Back and Ask for Help',
+            desc: 'Try to drag this back from the edge.',
+            next: 'WORLD_HOLDS_BREATH',
+            effects: { US_CREDIBILITY: -1, DIPLOMATIC_SPACE: 1 },
+            flags: { consulted_un: true }
+          }
+        ]
+      },
+
+      UN_AFTER_STRIKE: {
+        title: 'Violence First, Diplomacy Second',
+        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/us-constitution-workbook/refs/heads/main/node7.png',
+        imageCaption: 'Node 7 art',
+        text: `I try diplomacy after violence.
+
+The U.N. might help buy time. It might help slow the panic. It might make me look like I still have some control.
+
+Or it might just make me look like I threw a punch and then asked the room to calm down.
+
+Either way, I’m trying to cool off a fire I helped start.`,
+        choices: [
+          {
+            label: 'Pause if the Soviets Pause',
+            desc: 'Offer a narrow off-ramp and hope it still exists.',
+            next: 'WORLD_HOLDS_BREATH',
+            effects: { DIPLOMATIC_SPACE: 1 }
+          },
+          {
+            label: 'Use the U.N. as Cover',
+            desc: 'Talk publicly while quietly moving toward war.',
+            next: 'E2_MISCALCULATION',
+            effects: { WORLD_TENSION: 2, MILITARY_PRESSURE: 1 }
+          }
+        ]
+      },
+
+      INVASION_AFTER_STRIKE: {
+        title: 'Bombs Were Not Enough',
+        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/us-constitution-workbook/refs/heads/main/node8.png',
+        imageCaption: 'Node 8 art',
+        text: `Bombing was not enough, so now troops are moving too.
+
+The room feels more certain.
+
+I feel less certain.
+
+That’s the weird part. The louder the hawks get, the more I can feel how close this is getting to something nobody can control.`,
+        choices: [
+          {
+            label: 'Invade Now',
+            desc: 'Finish the crisis with brute force.',
+            next: 'E1_NUCLEAR_FIRE'
+          },
+          {
+            label: 'Wait for Moscow',
+            desc: 'Hold for one more reply and pray that matters.',
+            next: 'LETTERS',
+            effects: { DIPLOMATIC_SPACE: 1 }
+          }
+        ]
+      },
+
+      ULTIMATUM: {
+        title: 'A Threat With a Clock on It',
+        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/us-constitution-workbook/refs/heads/main/node9.png',
+        imageCaption: 'Node 9 art',
+        text: `I threaten invasion, but I do not start it yet.
+
+That buys me a little time.
+
+It also makes the crisis even more tense, because now there is a countdown in the room whether I say one out loud or not.`,
+        choices: [
+          {
+            label: 'Set a Hard Deadline',
+            desc: 'Force a fast answer under maximum pressure.',
+            next: 'WORLD_HOLDS_BREATH',
+            effects: { WORLD_TENSION: 2, PUBLIC_FEAR: 1 }
+          },
+          {
+            label: 'Keep It Loose',
+            desc: 'Threaten force, but leave a little space to talk.',
+            next: 'WORLD_HOLDS_BREATH',
+            effects: { US_CREDIBILITY: -1, DIPLOMATIC_SPACE: 1 }
+          }
+        ]
+      },
+
+      INVASION_SECRET_TALKS: {
+        title: 'Knife in One Hand, Message in the Other',
+        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/us-constitution-workbook/refs/heads/main/node10.png',
+        imageCaption: 'Node 10 art',
+        text: `I hold a knife in one hand and a message in the other.
+
+This might be strategy.
+
+It might also be hypocrisy.
+
+Probably both.
+
+The military threat is real. The diplomatic offer is real too. The question is whether the Soviets believe any of it.`,
+        choices: [
+          {
+            label: 'Promise No Invasion',
+            desc: 'Give them a reason to believe compromise could work.',
+            next: 'WORLD_HOLDS_BREATH',
+            effects: { DIPLOMATIC_SPACE: 2 },
+            flags: { promised_no_invasion_of_cuba: true }
+          },
+          {
+            label: 'Demand Public Humiliation',
+            desc: 'Push for a win so total the Soviets may never take it.',
+            next: 'E2_MISCALCULATION',
+            effects: { DIPLOMATIC_SPACE: -2, WORLD_TENSION: 2 }
+          }
+        ]
+      },
+
+      SEARCH_SHIPS: {
+        title: 'Every Ship. Every Time.',
+        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/us-constitution-workbook/refs/heads/main/node11.png',
+        imageCaption: 'Node 11 art',
+        text: `I tell the Navy to stop and search every Soviet ship.
+
+That sounds strong.
+
+It also sounds like the kind of move that leads to one nervous man making one terrible choice with a gun in his hand.`,
+        choices: [
+          {
+            label: 'Warning Shots',
+            desc: 'Push right up against a direct clash.',
+            next: 'WORLD_HOLDS_BREATH',
+            effects: { WORLD_TENSION: 2 }
+          },
+          {
+            label: 'Hold Fire',
+            desc: 'Stay hard without being the first side to shoot.',
+            next: 'WORLD_HOLDS_BREATH',
+            effects: { US_CREDIBILITY: 1, DIPLOMATIC_SPACE: 1 }
+          }
+        ]
+      },
+
+      BACKCHANNEL: {
+        title: 'Public Show, Private Reality',
+        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/us-constitution-workbook/refs/heads/main/node12.png',
+        imageCaption: 'Node 12 art',
+        text: `In public, I hold the line.
+
+In private, I open a backchannel.
+
+That is what this job is turning into: looking tough out front while quietly trying to keep the world from ending in the back room.`,
+        choices: [
+          {
+            label: 'Promise Not to Invade Cuba',
+            desc: 'Give the Soviets a real reason to back down.',
+            next: 'WORLD_HOLDS_BREATH',
+            effects: { DIPLOMATIC_SPACE: 2 },
+            flags: { promised_no_invasion_of_cuba: true }
+          },
+          {
+            label: 'Hold That Back',
+            desc: 'Keep more leverage, even if it keeps the fear higher.',
+            next: 'WORLD_HOLDS_BREATH',
+            effects: { US_CREDIBILITY: 1, WORLD_TENSION: 1 }
+          }
+        ]
+      },
+
+      LET_SHIPS_PASS: {
+        title: 'A Breath That Looks Weak',
+        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/us-constitution-workbook/refs/heads/main/node13.png',
+        imageCaption: 'Node 13 art',
+        text: `I ease up to avoid a direct naval fight.
+
+For one second, the world breathes.
+
+The hawks around me do not.
+
+To them, every Soviet ship that keeps moving is proof that I blinked.`,
+        choices: [
+          {
+            label: 'Come Back Harder',
+            desc: 'Recover politically with a stronger public line.',
+            next: 'WORLD_HOLDS_BREATH',
+            effects: { US_CREDIBILITY: 1, PUBLIC_FEAR: 1 }
+          },
+          {
+            label: 'Lean Into Diplomacy',
+            desc: 'Take the political hit and try the quieter path.',
+            next: 'LETTERS',
+            effects: { DIPLOMATIC_SPACE: 1, US_CREDIBILITY: -1 }
+          }
+        ]
+      },
+
+      DIPLOMACY_ONLY: {
+        title: 'Still Talking While the Clock Runs',
+        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/us-constitution-workbook/refs/heads/main/node14.png',
+        imageCaption: 'Node 14 art',
+        text: `I keep talking while the missile sites keep getting stronger.
+
+That is the problem.
+
+I may be doing the morally safer thing in the moment.
+
+I may also be letting the crisis get worse right in front of me.`,
+        choices: [
+          {
+            label: 'Stay Patient',
+            desc: 'Trust restraint all the way through.',
+            next: 'E3_TOO_LITTLE'
+          },
+          {
+            label: 'Add Pressure Now',
+            desc: 'Switch before this gets even worse.',
+            next: 'WORLD_HOLDS_BREATH',
+            effects: { WORLD_TENSION: 1, US_CREDIBILITY: 1 }
+          }
+        ]
+      },
+
+      THREATEN_STRIKE: {
+        title: 'Talk With a Loaded Gun',
+        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/seqset1slides/refs/heads/main/node15.png',
+        imageCaption: 'Node 15 art',
+        text: `Now I’m still talking, but everybody in the room can see the threat behind the words.
+
+Maybe that still counts as diplomacy.
+
+Maybe it is just delayed violence with nicer language.
+
+Either way, the temperature just went up.`,
+        choices: [
+          {
+            label: 'One Last Chance',
+            desc: 'Keep the threat there, but still leave a door open.',
+            next: 'WORLD_HOLDS_BREATH',
+            effects: { DIPLOMATIC_SPACE: 1 }
+          },
+          {
+            label: 'Prep the Strike for Real',
+            desc: 'Make sure the threat is not just talk.',
+            next: 'WORLD_HOLDS_BREATH',
+            effects: { WORLD_TENSION: 2, MILITARY_PRESSURE: 1 }
+          }
+        ]
+      },
+
+      WORLD_HOLDS_BREATH: {
+        title: 'The World Holds Its Breath',
+        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/seqset1slides/refs/heads/main/node16.jpg',
+        imageCaption: 'Node 16 art',
+        text: `Now everybody is in it.
+
+American families are scared. The military is preparing. Allies are watching. The Soviets are calculating.
+
+Nobody knows whether the next thing will be a message, a mistake, or a missile.
+
+And the worst part is this:
+
+Both sides think they are reacting to danger.
+
+Both sides think the other side is pushing too far.
+
+Both sides have enough weapons to destroy the planet.`,
+        support: {
+          title: 'That is the Cold War trap',
+          text: 'The U.S. saw missiles in Cuba as a direct threat. The Soviets saw American power near their borders as a threat too. Fear ran both ways.'
+        },
+        advisors: [
+          { role: 'General', text: '“Get ready to hit.”' },
+          { role: 'Diplomat', text: '“Wait for a message. One off-ramp may still be there.”' }
+        ],
+        choices: [
+          {
+            label: 'Raise Military Readiness',
+            desc: 'Make sure the Soviets know this can turn into war fast.',
+            next: 'LETTERS',
+            effects: { WORLD_TENSION: 2, MILITARY_PRESSURE: 1 }
+          },
+          {
+            label: 'Go Public at the U.N.',
+            desc: 'Use the world stage to buy time and pressure.',
+            next: 'LETTERS',
+            effects: { DIPLOMATIC_SPACE: 1, US_CREDIBILITY: -1 },
+            flags: { consulted_un: true }
+          },
+          {
+            label: 'Wait, But Stay Ready',
+            desc: 'Hold pressure without lunging first.',
+            next: 'LETTERS',
+            effects: { US_CREDIBILITY: 1, DIPLOMATIC_SPACE: 1 }
+          },
+          {
+            label: 'Signal You Can Compromise',
+            desc: 'Quietly hint that survival matters more than looking perfect.',
+            next: 'LETTERS',
+            effects: { DIPLOMATIC_SPACE: 2 }
+          }
+        ]
+      },
+
+      LETTERS: {
+        title: 'Two Letters. Two Different Games.',
+        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/seqset1slides/refs/heads/main/node17.png',
+        imageCaption: 'Node 17 art',
+        text: `Now Khrushchev sends me two messages, and they are absolutely not the same.
+
+The first one sounds almost human. He says the Soviets might pull the missiles out of Cuba if the U.S. promises not to invade Cuba.
+
+Then the second message lands.
+
+This one is colder. Harder. More demanding.
+
+Now he wants our missiles out of Turkey too.
+
+And that makes this crisis messier than people want to admit.
+
+Because from the Soviet point of view, America already has missiles sitting close to them as well.`,
+        support: {
+          title: 'Why Turkey matters',
+          text: 'The U.S. had missiles in Turkey near the Soviet Union. That did not make Soviet missiles in Cuba harmless, but it did make the crisis less morally simple.'
+        },
+        advisors: [
+          { role: 'Hawks', text: '“Reject both. Show strength.”' },
+          { role: 'Realists', text: '“Take the first letter publicly. Handle the rest quietly.”' }
+        ],
+        choices: [
+          {
+            label: 'Answer the First Letter Only',
+            desc: 'Promise not to invade Cuba if the missiles leave.',
+            next: 'INCIDENT',
+            effects: { DIPLOMATIC_SPACE: 1, US_CREDIBILITY: 1 },
+            flags: { promised_no_invasion_of_cuba: true }
+          },
+          {
+            label: 'Accept Both Publicly',
+            desc: 'Trade Cuba for Turkey out in the open.',
+            next: 'E4_POLITICAL_COST',
+            effects: { WORLD_TENSION: -2, US_CREDIBILITY: -2, DIPLOMATIC_SPACE: 2 }
+          },
+          {
+            label: 'Reject Both',
+            desc: 'Move closer to war and dare them to blink first.',
+            next: 'INCIDENT',
+            effects: { WORLD_TENSION: 3, DIPLOMATIC_SPACE: -3, MILITARY_PRESSURE: 2 },
+            flags: { rejected_both_letters: true }
+          },
+          {
+            label: 'Go Public on One, Deal Quietly on Turkey',
+            desc: 'Look strong in public. Compromise in private.',
+            next: 'INCIDENT',
+            effects: { WORLD_TENSION: -1, DIPLOMATIC_SPACE: 3 },
+            flags: { secret_turkey_deal: true, promised_no_invasion_of_cuba: true }
+          }
+        ]
+      },
+
+      INCIDENT: {
+        title: 'One Bad Move Away',
+        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/seqset1slides/refs/heads/main/node18.png',
+        imageCaption: 'Node 18 art',
+        text: `Just when it feels like we might still pull this back, something goes wrong.
+
+A U.S. aircraft is shot down.
+
+Now the whole room splits.
+
+Some men say this proves the Soviets are testing me.
+
+Others say it could be a local commander, bad timing, panic, or plain human error.
+
+And that is the horror of this whole thing.
+
+Sometimes the world does not end because leaders planned it.
+
+Sometimes it ends because somebody, somewhere, made one terrible call.`,
+        alert: {
+          title: 'This is the nightmare',
+          text: 'In a nuclear crisis, accidents and misunderstandings can be just as deadly as deliberate attacks.'
+        },
+        choices: [
+          {
+            label: 'Retaliate Right Now',
+            desc: 'Show that attacking American forces has a price.',
+            next: (state) => {
+              state.flags.retaliated_after_incident = true;
+              return state.stats.WORLD_TENSION >= 8 ? 'E1_NUCLEAR_FIRE' : 'E2_MISCALCULATION';
+            },
+            effects: { WORLD_TENSION: 4 }
+          },
+          {
+            label: 'Hold Fire',
+            desc: 'Refuse to let one incident become the end of the world.',
+            next: (state) => {
+              if (state.flags.secret_turkey_deal && state.flags.promised_no_invasion_of_cuba) return 'E6_HISTORICAL';
+              return 'E5_DIRTY_PEACE';
+            },
+            effects: { DIPLOMATIC_SPACE: 2, US_CREDIBILITY: -1 }
+          },
+          {
+            label: 'Raise the Alert, Not the Bombs',
+            desc: 'Signal strength without firing next.',
+            next: 'E5_DIRTY_PEACE',
+            effects: { WORLD_TENSION: 1, US_CREDIBILITY: 1, DIPLOMATIC_SPACE: 1 }
+          },
+          {
+            label: 'One More Hit Means War',
+            desc: 'Draw a final line and hope nobody crosses it.',
+            next: 'E5_DIRTY_PEACE',
+            effects: { WORLD_TENSION: 2, US_CREDIBILITY: 2 }
+          }
+        ]
+      }
+    };
+
+    const endings = {
+      E1_NUCLEAR_FIRE: {
+        title: 'Nuclear Fire',
+        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/seqset1slides/refs/heads/main/node19.png',
+        imageCaption: 'Ending art',
+        tone: 'bad',
+        result: 'Game Over: You chose escalation over control.',
+        text: `I thought force would solve the crisis.
+
+Instead, force erased the line between crisis and war.
+
+Attacks triggered retaliation. Retaliation triggered more retaliation. The Cold War finally snapped into the worst thing it could become.
+
+This stopped being about Cuba.
+
+It stopped being about image.
+
+It stopped being about winning.
+
+Cities burned. Millions died. The world I was trying to protect collapsed in nuclear fire.`,
+        reflection: 'Did this ending come from one choice, or from a whole pattern of choosing harder and harder escalation?'
+      },
+      E2_MISCALCULATION: {
+        title: 'Miscalculation Apocalypse',
+        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/seqset1slides/refs/heads/main/node20.png',
+        imageCaption: 'Ending art',
+        tone: 'bad',
+        result: 'Game Over: The world ended by mistake.',
+        text: `Nobody sat down and said, “Let’s end civilization today.”
+
+That is what makes this worse.
+
+One confrontation became two. A warning became a shot. A local decision turned into a global disaster.
+
+The world did not end because of one giant master plan.
+
+It ended because fear, pressure, and bad timing met weapons too powerful for human error.`,
+        reflection: 'Why can accidents and misunderstandings be just as dangerous as deliberate aggression in a nuclear crisis?'
+      },
+      E3_TOO_LITTLE: {
+        title: 'Too Little, Too Late',
+        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/us-constitution-workbook/refs/heads/main/node21.png',
+        imageCaption: 'Ending art',
+        tone: 'mixed',
+        result: 'Ending Unlocked: You avoided immediate war, but lost control of the crisis.',
+        text: `I stayed restrained.
+
+That felt moral.
+
+It also gave the Soviets more time.
+
+The missile threat got stronger. America looked unsure. The crisis did not explode right away, but it did slip further out of my hands.
+
+Peace without leverage is not always peace.
+
+Sometimes it is just delay.`,
+        reflection: 'Can a choice feel morally better in the moment but still make the bigger crisis worse?'
+      },
+      E4_POLITICAL_COST: {
+        title: 'Peace With Political Cost',
+        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/seqset1slides/refs/heads/main/node22.png',
+        imageCaption: 'Ending art',
+        tone: 'mixed',
+        result: 'Ending Unlocked: You saved lives, but paid for it politically.',
+        text: `The missiles were removed. War was avoided. People lived.
+
+But the public trade came with a cost.
+
+A lot of Americans would see it as the U.S. getting pushed around in public. Allies would wonder how solid American power really looked.
+
+I kept people alive.
+
+I just did it in a way that made strength look negotiable.`,
+        reflection: 'Should leaders care more about appearances, or more about keeping people alive?'
+      },
+      E5_DIRTY_PEACE: {
+        title: 'Dirty Peace',
+        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/seqset1slides/refs/heads/main/node23.png',
+        imageCaption: 'Ending art',
+        tone: 'goodish',
+        result: 'Ending Unlocked: You got a survivable ending, not a clean one.',
+        text: `I did not get a pure victory.
+
+I got the least terrible outcome.
+
+I used pressure to make diplomacy matter, and I used diplomacy to stop pressure from turning into apocalypse.
+
+Was it fully honest? No.
+
+Was it fully noble? Also no.
+
+Did it help keep millions of people alive?
+
+Yes.
+
+Sometimes history does not reward purity.
+
+Sometimes it rewards whoever keeps the world from burning.`,
+        reflection: 'Does an imperfect peace still count as strong leadership? Why or why not?'
+      },
+      E6_HISTORICAL: {
+        title: 'The Closest Thing to a Good Ending',
+        image: 'https://raw.githubusercontent.com/dwallace87-lgtm/seqset1slides/refs/heads/main/node24.png',
+        imageCaption: 'Ending art',
+        tone: 'goodish',
+        result: 'Ending Unlocked: You found the closest thing this crisis had to a win.',
+        text: `The Soviet missiles leave Cuba.
+
+The U.S. publicly promises not to invade Cuba.
+
+Privately, American missiles in Turkey will later be removed.
+
+Nobody gets everything.
+
+Nobody gets to act innocent.
+
+Nobody gets to pretend this was simple.
+
+But the world survives.
+
+And in a moment like this, survival counts for a lot.`,
+        reflection: 'Why does the best real-world ending here still feel messy instead of heroic?'
+      }
+    };
+
+    updateSidebar();
+    renderScene('OPENING');
+  </script>
+</body>
+</html>
