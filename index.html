@@ -948,7 +948,35 @@
       box-shadow: var(--shadow);
       position: relative;
       z-index: 1;
+      overflow: hidden;
       animation: boxSlide 0.5s ease 0.55s both;
+    }
+
+    .cfu-brief.unlocked {
+      border-color: rgba(109,212,191,0.65);
+      border-left-color: var(--accent);
+      animation: boxSlide 0.5s ease 0.55s both, cfuUnlockGlow 0.75s ease;
+    }
+
+    .cfu-brief.unlocked::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(100deg, transparent 0%, rgba(109,212,191,0.16) 45%, transparent 70%);
+      transform: translateX(110%);
+      animation: cfuSuccessSweep 0.7s ease 0.05s;
+    }
+
+    @keyframes cfuUnlockGlow {
+      0% { box-shadow: var(--shadow); }
+      45% { box-shadow: 0 0 26px rgba(109,212,191,0.34), var(--shadow); }
+      100% { box-shadow: var(--shadow); }
+    }
+
+    @keyframes cfuSuccessSweep {
+      from { transform: translateX(-110%); }
+      to { transform: translateX(110%); }
     }
 
     .cfu-kicker {
@@ -1010,6 +1038,42 @@
       background: rgba(245,185,66,0.14);
     }
 
+    .cfu-option.correct-selected {
+      border-color: rgba(109,212,191,0.55);
+      background: rgba(109,212,191,0.12);
+    }
+
+    .cfu-option:disabled {
+      cursor: default;
+    }
+
+    .cfu-success-badge {
+      display: none;
+      width: fit-content;
+      margin: 12px 0 0;
+      padding: 5px 10px;
+      border: 1px solid rgba(109,212,191,0.7);
+      background: rgba(109,212,191,0.1);
+      color: var(--accent);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      box-shadow: 0 0 14px rgba(109,212,191,0.18);
+    }
+
+    .cfu-success-badge.show {
+      display: inline-flex;
+      animation: cfuBadgePop 0.42s ease;
+    }
+
+    @keyframes cfuBadgePop {
+      0% { opacity: 0; transform: scale(0.86) rotate(-2deg); }
+      70% { opacity: 1; transform: scale(1.04) rotate(1deg); }
+      100% { opacity: 1; transform: scale(1) rotate(0); }
+    }
+
     .cfu-feedback {
       display: none;
       margin-top: 12px;
@@ -1020,6 +1084,18 @@
       font-family: 'Special Elite', monospace;
       font-size: 14px;
       line-height: 1.55;
+    }
+
+    .cfu-feedback.supportive {
+      border-left-color: var(--warn);
+      background: rgba(245,185,66,0.08);
+      color: #f3dfac;
+    }
+
+    .cfu-feedback.correct {
+      border-left-color: var(--accent);
+      background: rgba(109,212,191,0.1);
+      color: #daf4ec;
     }
 
     .cfu-feedback.show { display: block; }
@@ -1936,40 +2012,66 @@
             `).join('')}
           </div>
           <div class="cfu-feedback" id="cfu-feedback" aria-live="polite"></div>
-          <button class="btn cfu-continue" id="cfu-continue" type="button">Continue Briefing</button>
+          <div class="cfu-success-badge" id="cfu-success-badge" aria-hidden="true">BRIEFING UNLOCKED</div>
+          <button class="btn cfu-continue" id="cfu-continue" type="button">Continue to Choices</button>
         </section>`;
     }
 
     function armCFU(cfu) {
       if (!cfu) return;
+      const cfuBrief = document.getElementById('cfu-brief');
       const feedback = document.getElementById('cfu-feedback');
+      const successBadge = document.getElementById('cfu-success-badge');
       const continueBtn = document.getElementById('cfu-continue');
       const choicesHeader = document.getElementById('choices-header');
       const choicesWrap = document.getElementById('choices');
       const options = Array.from(document.querySelectorAll('.cfu-option'));
-      if (!feedback || !continueBtn || !choicesHeader || !choicesWrap || !options.length) return;
+      if (!cfuBrief || !feedback || !successBadge || !continueBtn || !choicesHeader || !choicesWrap || !options.length) return;
+
+      const correctIndex = Number.isInteger(cfu.correctIndex) ? cfu.correctIndex : 0;
+      let briefingUnlocked = false;
 
       choicesHeader.classList.add('locked');
       choicesWrap.classList.add('locked');
 
       options.forEach((optionBtn) => {
         optionBtn.addEventListener('click', () => {
+          if (briefingUnlocked) return;
+
+          const chosenIndex = Number(optionBtn.dataset.feedback);
+          const isCorrect = chosenIndex === correctIndex;
+
           options.forEach(btn => {
-            btn.classList.remove('selected');
-            btn.disabled = true;
+            btn.classList.remove('selected', 'correct-selected');
           });
           optionBtn.classList.add('selected');
-          feedback.innerHTML = `<strong>Briefing Note:</strong> ${cfu.feedback}`;
+
+          feedback.classList.remove('correct', 'supportive');
           feedback.classList.add('show');
+
+          if (!isCorrect) {
+            feedback.innerHTML = `<strong>Try this angle:</strong> ${cfu.retryFeedback || 'You’re close — check what action lowers danger without looking passive.'}`;
+            feedback.classList.add('supportive');
+            playBeep(360, 0.08, 0.035);
+            return;
+          }
+
+          briefingUnlocked = true;
+          optionBtn.classList.add('correct-selected');
+          options.forEach(btn => { btn.disabled = true; });
+          cfuBrief.classList.add('unlocked');
+          feedback.innerHTML = `<strong>BRIEFING UNLOCKED:</strong> ${cfu.feedback}`;
+          feedback.classList.add('correct');
+          successBadge.classList.add('show');
           continueBtn.classList.add('show');
-          playBeep(620, 0.12, 0.05);
+          choicesHeader.classList.remove('locked');
+          choicesWrap.classList.remove('locked');
+          playBeep(720, 0.12, 0.045);
+          setTimeout(playStamp, 120);
         });
       });
 
       continueBtn.addEventListener('click', () => {
-        choicesHeader.classList.remove('locked');
-        choicesWrap.classList.remove('locked');
-        playStamp();
         choicesHeader.scrollIntoView({ behavior: 'smooth', block: 'start' });
       });
     }
@@ -2205,6 +2307,8 @@ On the screens around me, the danger is impossible to ignore. <span class="dange
         cfu: {
           question: 'Who feels threatened here?',
           options: ['Only the United States', 'Only the Soviet Union', 'Both sides feel danger close to home'],
+          correctIndex: 2,
+          retryFeedback: 'Close read: zoom out. Both countries have weapons near the other side.',
           feedback: 'Both sides feel threatened: Soviet missiles in Cuba scare the U.S., and U.S. missiles in Turkey scare the Soviet Union. That fear makes every move easier to misread.'
         },
         advisors: [
@@ -2319,6 +2423,8 @@ And once <span class="danger">armed men are staring each other down in the ocean
         cfu: {
           question: 'Which move raises pressure without starting war right away?',
           options: ['Bomb the missile sites immediately', 'Use a naval quarantine line', 'Do nothing and hope it fades'],
+          correctIndex: 1,
+          retryFeedback: 'Almost — look for the option that pressures ships but does not fire first.',
           feedback: 'A quarantine puts real pressure on Soviet ships, but it does not fire first. That is why it can look strong while still leaving room to talk.'
         },
         advisors: [
@@ -2634,6 +2740,8 @@ And the worst part is this:
         cfu: {
           question: 'Why is this risky?',
           options: ['Both sides think they are defending themselves', 'Nobody has weapons anymore', 'The public already knows the secret deal'],
+          correctIndex: 0,
+          retryFeedback: 'Think perspective: each side believes it is responding to the other side.',
           feedback: 'The danger is that each side sees itself as defensive and the other side as aggressive. That can turn fear into a fast chain reaction.'
         },
         advisors: [
@@ -2676,6 +2784,8 @@ This crisis was never just about Cuba. <strong>It was about two superpowers who 
         cfu: {
           question: 'Why would this make Kennedy look weak or strong?',
           options: ['Publicly trading Turkey could look like giving in', 'Ignoring both letters automatically ends the crisis', 'Secret talks are the same as surrender'],
+          correctIndex: 0,
+          retryFeedback: 'Look for the image problem: what could make Kennedy seem like he gave in?',
           feedback: 'Kennedy has to balance image and survival. A public trade might look like backing down, but a private deal can lower danger while protecting his public strength.'
         },
         advisors: [
@@ -2720,6 +2830,8 @@ Others say it could be <span class="hl">a local commander, bad timing, panic, or
         cfu: {
           question: 'Why is one incident so dangerous?',
           options: ['Leaders may mistake an accident for an attack', 'It proves every Soviet leader ordered war', 'It means diplomacy has already worked'],
+          correctIndex: 0,
+          retryFeedback: 'Focus on uncertainty: leaders may not know if a shot was ordered or accidental.',
           feedback: 'In a tense crisis, leaders may not know whether a shot was ordered or accidental. Retaliating too fast can turn confusion into war.'
         },
         choices: [
